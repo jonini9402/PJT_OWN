@@ -36,7 +36,7 @@ public class PostController {
 	@PostMapping
 	public ResponseEntity<PostResponse> createPost(@RequestBody PostCreateRequest request, HttpSession session) {
 		//1. 세션에서 로그인 사용자 ID를 가져옴 (로그인 시 "loginUser"라는 이름으로 저장)
-		Integer currentUserId = (Integer) session.getAttribute("loginUser");
+		Integer currentUserId = (Integer) session.getAttribute("loginUserId");
 		
 		if (currentUserId == null) {
 	        // 2. 로그인되지 않은 경우의 예외 처리 (401 Unauthorized 등)

@@ -18,7 +18,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession(false);
 
         // 세션이 없거나 loginUser 속성이 없으면 인증 실패
-        if (session == null || session.getAttribute("loginUser") == null) {
+        if (session == null || session.getAttribute("loginUserId") == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
             response.getWriter().write("로그인이 필요합니다.");
             return false;

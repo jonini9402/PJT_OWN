@@ -4,12 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.own.domain.user.dao.UserDao;
+import com.own.domain.user.dto.model.User;
+import com.own.domain.user.dto.request.UserLoginRequest;
 import com.own.domain.user.dto.request.UserSignupRequest;
 import com.own.domain.user.dto.request.UserUpdateRequest;
 import com.own.domain.user.dto.response.UserResponse;
 import com.own.domain.user.dto.response.UserTierResponse;
 import com.own.global.exception.CustomException;
 import com.own.global.exception.ErrorCode;
+
+import jakarta.servlet.http.HttpSession;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -58,6 +62,31 @@ public class UserServiceImpl implements UserService {
 	public UserTierResponse getUserTier(int userId) {
 		
 		return userDao.selectUserTierById(userId);
+	}
+
+	@Override
+	public UserResponse login(UserLoginRequest request, HttpSession session) {
+		
+		User user = userDao.selectUserByEmail(request.getEmail());
+		
+		if (user == null) {
+			throw new CustomException(ErrorCode.USER_NOT_FOUND);
+		}
+		
+		if(!user.getPassword().equals(request.getPassword())) {
+			throw new CustomException(ErrorCode.INVALID_PASSWORD);
+		}
+		
+		// 세션에 로그인 정보 저장
+		session.setAttribute("loginUserId", user.getUserId());		
+		
+		return new UserResponse(
+				user.getName(),
+				user.getNickname(),
+				user.getEmail(),
+				user.getProfileImg(),
+				user.getTierLevel()
+		);
 	}
 
 }

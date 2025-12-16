@@ -11,11 +11,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.own.domain.user.dto.request.UserLoginRequest;
 import com.own.domain.user.dto.request.UserSignupRequest;
 import com.own.domain.user.dto.request.UserUpdateRequest;
 import com.own.domain.user.dto.response.UserResponse;
 import com.own.domain.user.dto.response.UserTierResponse;
 import com.own.domain.user.service.UserService;
+import com.own.global.exception.CustomException;
+import com.own.global.exception.ErrorCode;
+
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/api/user")
@@ -68,5 +73,29 @@ public class UserController {
 		
 		return ResponseEntity.ok(tier);
 	}
+	
+	// 로그인
+	@PostMapping("/login")
+	public UserResponse login(@RequestBody UserLoginRequest request, HttpSession session) {
+		return userService.login(request, session);
+	}
+	
+	// 로그아웃
+	@PostMapping("/logout")
+	public void logout(HttpSession session) {
+		session.invalidate();
+	}
 
+	// 테스트용 내 정보 조회
+	 @GetMapping("/me")
+	    public UserResponse getMyInfo(HttpSession session) {
+
+	        Integer userId = (Integer) session.getAttribute("loginUserId");
+
+	        if (userId == null) {
+	            throw new CustomException(ErrorCode.UNAUTHORIZED);
+	        }
+
+	        return userService.getUserProfile(userId);
+	    }
 }

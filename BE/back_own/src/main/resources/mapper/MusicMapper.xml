@@ -5,4 +5,23 @@
 
 <mapper namespace = "com.own.domain.music.dao.MusicDao">
 
+	<select id="findBySpotifyTrackId" parameterType="string" resultType="com.own.domain.music.dto.model.Music">
+		SELECT *
+		FROM music
+		WHERE spotify_track_id = #{spotifyTrackId}
+	</select>
+	
+	<insert id="insertMusic" parameterType="com.own.domain.music.dto.request.MusicSaveRequest"
+			useGeneratedKeys="true" keyProperty="musicId">
+			
+		INSERT INTO music (
+			spotify_track_id, title, artist, album_img, duration, preview_url
+		)
+		VALUES (
+			#{spotifyTrackId}, #{musicTitle}, #{artist}, #{albumImg},
+			#{duration}, #{previewUrl}
+		)
+	
+	</insert>
+
 </mapper>

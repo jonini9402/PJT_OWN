@@ -53,5 +53,13 @@
 		WHERE user_id = #{userId} AND deleted_at IS NULL
 	</select>	
 	
+	<!-- 이메일로 유저 조회 -->
+	<select id="selectUserByEmail" parameterType="string" resultType="com.own.domain.user.dto.model.User">
+		SELECT
+			user_id, name, nickname, email, password, profile_img, tier_level, status
+		FROM users
+		WHERE email = #{email} AND status = true AND deleted_at IS NULL	
+		
+	</select>
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.own.domain.user.dao;
 
+import com.own.domain.user.dto.model.User;
 import com.own.domain.user.dto.request.UserSignupRequest;
 import com.own.domain.user.dto.request.UserUpdateRequest;
 import com.own.domain.user.dto.response.UserResponse;
@@ -21,4 +22,7 @@ public interface UserDao {
 	
 	// 유저등급 조회
 	public UserTierResponse selectUserTierById(int userId);
+	
+	// 로그인용 이메일로 조회
+	User selectUserByEmail(String email);
 }

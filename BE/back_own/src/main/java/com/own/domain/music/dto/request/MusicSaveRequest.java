@@ -1,7 +1,7 @@
 package com.own.domain.music.dto.request;
 
 public class MusicSaveRequest {
-	private int musicId;
+	private Integer musicId;
 	private String musicTitle;
 	private String artist;
 	private String albumImg;
@@ -9,7 +9,7 @@ public class MusicSaveRequest {
 	private int duration;
 	private String previewUrl;
 	
-	public MusicSaveRequest(int musicId, String musicTitle, String artist, String albumImg, String spotifyTrackId,
+	public MusicSaveRequest(Integer musicId, String musicTitle, String artist, String albumImg, String spotifyTrackId,
 			int duration, String previewUrl) {
 		super();
 		this.musicId = musicId;
@@ -21,10 +21,10 @@ public class MusicSaveRequest {
 		this.previewUrl = previewUrl;
 	}
 	
-	public int getMusicId() {
+	public Integer getMusicId() {
 		return musicId;
 	}
-	public void setMusicId(int musicId) {
+	public void setMusicId(Integer musicId) {
 		this.musicId = musicId;
 	}
 	public String getMusicTitle() {
