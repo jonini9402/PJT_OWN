@@ -18,16 +18,17 @@
 	</delete>
 
 	<!-- 특정 포스트의 북마크 개수 세기 -->
-	<select id= "countBookmarkByPostId">
-		SELECT 
-		FROM 
-		WHERE 
+	<select id= "countBookmarkByPostId" resultType="int">
+		SELECT COUNT(*)
+		FROM user_post_bookmark
+		WHERE post_id = #{postId}
 	</select>
 	
 	<!-- 특정 유저가 특정 게시물에 북마크했는지 체크 -->
-	<select id = "existsBookmark">
-		SELECT 
-		FROM 
-		WHERE 
+	<select id = "existsBookmark" resultType = "int">
+		SELECT 1
+		FROM user_post_bookmark
+		WHERE post_id = #{postId} AND user_id = #{userId}
+		LIMIT 1
 	</select>
 </mapper>

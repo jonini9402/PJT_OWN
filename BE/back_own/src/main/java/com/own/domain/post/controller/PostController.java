@@ -44,7 +44,7 @@ public class PostController {
 	    }
 		
 		//테스트용
-	//	currentUserId = 1;
+		//currentUserId = 1;
 		
 		//가져온 ID를 PostCreateRequest 객체에 설정
 		request.setUserId(currentUserId);

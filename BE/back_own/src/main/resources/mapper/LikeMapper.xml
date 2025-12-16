@@ -5,4 +5,30 @@
 
 <mapper namespace = "com.own.domain.like.dao.LikeDao">
 
+	<!-- 좋아요 -->
+	<insert id="insertLike">
+		INSERT INTO user_post_like (user_id, post_id, created_at)
+		VALUES (#{userId}, #{postId}, NOW())
+	</insert>
+	
+	<!--좋아요 취소 -->
+	<delete id="deleteLike">
+		DELETE FROM user_post_like
+		WHERE user_id = #{userId} AND post_id = #{postId}
+	</delete>
+
+	<!-- 특정 포스트의 좋아요 개수 세기 -->
+	<select id= "countLikeByPostId" resultType="int">
+		SELECT COUNT(*)
+		FROM user_post_like
+		WHERE post_id = #{postId}
+	</select>
+	
+	<!-- 특정 유저가 특정 게시물에 좋아요했는지 체크 -->
+	<select id = "existsLike" resultType = "boolean">
+		SELECT COUNT(*) > 0
+        FROM user_post_like
+        WHERE post_id = #{postId}
+          AND user_id = #{userId}
+	</select>
 </mapper>
