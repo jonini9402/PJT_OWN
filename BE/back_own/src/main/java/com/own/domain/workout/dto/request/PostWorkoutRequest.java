@@ -1,19 +1,17 @@
 package com.own.domain.workout.dto.request;
 
-import java.util.List;
-
 public class PostWorkoutRequest {
 	
 	private int postId;
-	private List<Integer> workoutTypeIds;
+	private int workoutTypeId;
 	
 	public PostWorkoutRequest() {
 		
 	}
 	
-	public PostWorkoutRequest(int postId, List<Integer> workoutTypeIds) {
+	public PostWorkoutRequest(int postId, int workoutTypeId) {
 		this.postId = postId;
-		this.workoutTypeIds = workoutTypeIds;
+		this.workoutTypeId = workoutTypeId;
 	}
 
 	public int getPostId() {
@@ -24,12 +22,12 @@ public class PostWorkoutRequest {
 		this.postId = postId;
 	}
 
-	public List<Integer> getWorkoutTypeIds() {
-		return workoutTypeIds;
+	public int getWorkoutTypeId() {
+		return workoutTypeId;
 	}
 
-	public void setWorkoutTypeIds(List<Integer> workoutTypeIds) {
-		this.workoutTypeIds = workoutTypeIds;
+	public void setWorkoutTypeId(int workoutTypeId) {
+		this.workoutTypeId = workoutTypeId;
 	}
 	
 	

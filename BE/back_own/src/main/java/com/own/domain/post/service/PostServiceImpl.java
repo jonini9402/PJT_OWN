@@ -39,7 +39,7 @@ public class PostServiceImpl implements PostService {
 			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 		}
 
-		workoutService.saveWorkoutTypesForPost(postId, java.util.Collections.singletonList(request.getWorkoutTag()));
+		workoutService.saveWorkoutTypesForPost(postId, request.getWorkoutTag());
 
 		if (request.getEmotionTags() != null && !request.getEmotionTags().isEmpty()) {
 			emotionService.saveEmotionTypesForPost(postId, request.getEmotionTags());

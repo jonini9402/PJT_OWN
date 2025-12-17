@@ -29,7 +29,7 @@ public class WorkoutController {
 	
 	// postId로 특정 포스트의 태그 조회
 	@GetMapping("/post/{postId}")
-	public List<WorkoutTypeResponse> getWorkoutTypesByPost(@PathVariable int postId){
+	public WorkoutTypeResponse getWorkoutTypesByPost(@PathVariable int postId){
 		
 		return workoutService.getWorkoutTypesByPostId(postId);
 	}
@@ -38,7 +38,7 @@ public class WorkoutController {
 	@PostMapping("/post")
 	public void savePostWorkout(@RequestBody PostWorkoutRequest post) {
 		
-		workoutService.saveWorkoutTypesForPost(post.getPostId(), post.getWorkoutTypeIds());
+		workoutService.saveWorkoutTypesForPost(post.getPostId(), post.getWorkoutTypeId());
 		
 	}
 	

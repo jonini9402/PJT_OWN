@@ -9,9 +9,9 @@ public interface WorkoutService {
 	
 	List<WorkoutType> getAllWorkoutTypes();
 	
-	List<WorkoutTypeResponse> getWorkoutTypesByPostId(int postId);
+	WorkoutTypeResponse getWorkoutTypesByPostId(int postId);
 	
 	// post_workout_type 에 포스트가 가진 workouttype 저장
-	void saveWorkoutTypesForPost(int postId, List<Integer> typeIds);
+	void saveWorkoutTypesForPost(int postId, int typeId);
 	
 }

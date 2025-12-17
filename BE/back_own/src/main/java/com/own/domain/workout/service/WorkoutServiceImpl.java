@@ -17,29 +17,17 @@ public class WorkoutServiceImpl implements WorkoutService {
 	private WorkoutDao workoutDao;
 	
 	@Override
-	public List<WorkoutTypeResponse> getWorkoutTypesByPostId(int postId) {
+	public WorkoutTypeResponse getWorkoutTypesByPostId(int postId) {
 		
-		List<WorkoutType> list = workoutDao.selectWorkoutTypesByPostId(postId);
-		
-		List<WorkoutTypeResponse> responseList = new ArrayList<>();
-		
-		for(WorkoutType w : list) {
-			WorkoutTypeResponse res = new WorkoutTypeResponse(
-					w.getWorkoutTypeId(),
-					w.getWorkoutName()
-			);
-			responseList.add(res);
-		}
-		
-		return responseList;
+		return workoutDao.selectWorkoutTypesByPostId(postId);
 	}
 
 	@Override
-	public void saveWorkoutTypesForPost(int postId, List<Integer> typeIds) {
+	public void saveWorkoutTypesForPost(int postId, int typeId) {
 		
-		for(int typeId : typeIds) {
+		
 			workoutDao.insertPostWorkoutType(postId, typeId);
-		}
+		
 		
 	}
 
