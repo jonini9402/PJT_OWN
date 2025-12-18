@@ -7,11 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.own.domain.post.dto.request.PostCreateRequest;
@@ -69,13 +71,15 @@ public class PostController {
 
 	// 특정 유저가 좋아요한 게시글 조회
 	@GetMapping("/likes")
-	public ResponseEntity<List<PostResponse>> getLikedPosts(PostSearchRequest request) {
+	public ResponseEntity<List<PostResponse>> getLikedPosts(@RequestParam int userId,@ModelAttribute PostSearchRequest request) {
+		request.setUserId(userId);
 		return ResponseEntity.ok(postService.getLikedPosts(request));
 	}
 
 	// 특정 유저가 북마크한 게시글 조회
 	@GetMapping("/bookmarks")
-	public ResponseEntity<List<PostResponse>> getBookmarkedPosts(PostSearchRequest request) {
+	public ResponseEntity<List<PostResponse>> getBookmarkedPosts(@RequestParam int userId,@ModelAttribute PostSearchRequest request) {
+		request.setUserId(userId);
 		return ResponseEntity.ok(postService.getBookmarkedPosts(request));
 	}
 

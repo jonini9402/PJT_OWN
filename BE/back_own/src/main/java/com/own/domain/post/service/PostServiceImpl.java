@@ -31,38 +31,38 @@ public class PostServiceImpl implements PostService {
 	@Override
 	@Transactional
 	public PostResponse createPost(PostCreateRequest request) {
-		 // ===== 1. 요청 검증 (DB 접근 전) =====
+		// 1. 요청 검증 (DB 접근 전)
 
-	    if (request.getMusicId() == null) {
-	        throw new CustomException(ErrorCode.INVALID_MUSIC_REQUEST);
-	    }
+		if (request.getMusicId() == null) {
+			throw new CustomException(ErrorCode.INVALID_MUSIC_REQUEST);
+		}
 
-	    if (request.getWorkoutTag() == null) {
-	        throw new CustomException(ErrorCode.INVALID_WORKOUT_REQUEST);
-	    }
+		if (request.getWorkoutTag() == null) {
+			throw new CustomException(ErrorCode.INVALID_WORKOUT_REQUEST);
+		}
 
-	    if (request.getEmotionTags() == null || request.getEmotionTags().isEmpty()) {
-	        throw new CustomException(ErrorCode.INVALID_EMOTION_REQUEST);
-	    }
+		if (request.getEmotionTags() == null || request.getEmotionTags().isEmpty()) {
+			throw new CustomException(ErrorCode.INVALID_EMOTION_REQUEST);
+		}
 
-	    // ===== 2. 게시글 저장 =====
-	    postDao.insertPost(request);
-	    Integer postId = request.getPostId();
+		// 2. 게시글 저장
+		postDao.insertPost(request);
+		Integer postId = request.getPostId();
 
-	    if (postId == null) {
-	        throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-	    }
+		if (postId == null) {
+			throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+		}
 
-	    // ===== 3. 연관 데이터 저장 =====
-	    workoutService.saveWorkoutTypesForPost(postId, request.getWorkoutTag());
-	    emotionService.saveEmotionTypesForPost(postId, request.getEmotionTags());
+		// 3. 연관 데이터 저장
+		workoutService.saveWorkoutTypesForPost(postId, request.getWorkoutTag());
+		emotionService.saveEmotionTypesForPost(postId, request.getEmotionTags());
 
-	    // ===== 4. 응답 조회 =====
-	    PostResponse response = postDao.findPostResponseById(postId);
-		
-	  //PostResponse 객체 반환
-	  		return response;
-		
+		// 4. 응답 조회
+		PostResponse response = postDao.findPostResponseById(postId);
+
+		// PostResponse 객체 반환
+		return response;
+
 	}
 
 	@Override
@@ -89,11 +89,25 @@ public class PostServiceImpl implements PostService {
 	@Override
 	@Transactional
 	public int updatePost(int postId, PostUpdateRequest request) {
+		// 1. 캡션 수정
 		int updated = postDao.updatePost(postId, request);
 
 		if (updated == 0) {
 			throw new CustomException(ErrorCode.POST_NOT_FOUND);
 		}
+
+		// 2. 감정 태그 수정 (삭제 후 재등록) 
+		if (request.getEmotionTags() != null) {
+			// 기존 감정 태그 삭제
+		postDao.deletePostEmotionTypes(postId);
+
+			// 새 감정 태그 등록 (비어있지 않은 경우만) 
+		if (!request.getEmotionTags().isEmpty()) {
+			emotionService.saveEmotionTypesForPost(postId, request.getEmotionTags());
+			}
+		}
+		//3. 운동 태그는 수정 못홤
+		
 		return updated; // 성공 시 1
 	}
 

@@ -61,14 +61,15 @@
         ORDER BY p.post_id DESC  LIMIT 10          
          </select>
 
-<!--  특정 유저가 작성한 포스트 조회 -->
+	<!--  특정 유저가 작성한 포스트 조회 -->
     <select id="findByUserId" resultType="com.own.domain.post.dto.response.PostResponse">
         SELECT 
             <include refid="selectPostDetails"/>
         FROM post p
         LEFT JOIN users u ON p.user_id = u.user_id
         LEFT JOIN music m ON p.music_id = m.music_id
-        WHERE p.user_id = #{userId} <include refid="cursorCondition"/>
+        WHERE p.user_id = #{userId} 
+        <include refid="cursorCondition"/>
         ORDER BY p.post_id DESC
         LIMIT 10
     </select>
@@ -82,9 +83,7 @@
         LEFT JOIN users u ON p.user_id = u.user_id
         LEFT JOIN music m ON p.music_id = m.music_id
         WHERE l.user_id = #{userId}
-        
         <include refid="cursorCondition"/>
-        
         ORDER BY p.post_id DESC
         LIMIT 10
     </select>
@@ -109,6 +108,18 @@
         VALUES (#{userId}, #{musicId}, #{caption}, NOW())
     </insert>
     
+    <!-- 감정 타입 추가  -->
+    <insert id="insertPostEmotionType">
+        INSERT INTO post_emotion_type (post_id, emotion_type_id)
+        VALUES (#{postId}, #{emotionTypeId})
+    </insert>
+    
+    <!-- 운동 타입 추가 -->
+    <insert id="insertPostWorkoutType">
+        INSERT INTO post_workout_type (post_id, workout_type_id)
+        VALUES (#{postId}, #{workoutTypeId})
+    </insert>
+    
     <!-- 포스트 작성 후 생성되는 응답 객체 조회 메서드 -->
 	<select id="findPostResponseById" resultType="com.own.domain.post.dto.response.PostResponse">
     	SELECT 
@@ -125,6 +136,12 @@
 		SET caption =  #{request.caption}
 		WHERE post_id = #{postId}
 	</update>
+	
+	<!-- 포스트 수정 시 감정 태그만 삭제 -->
+	<delete id="deletePostEmotionTypes">
+    DELETE FROM post_emotion_type
+    WHERE post_id = #{postId}
+</delete>
 	
 	<!-- 포스트 삭제 -->
 	<delete id="deletePost">
