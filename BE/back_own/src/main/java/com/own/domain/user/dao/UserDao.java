@@ -25,4 +25,7 @@ public interface UserDao {
 	
 	// 로그인용 이메일로 조회
 	User selectUserByEmail(String email);
+	
+	//로그인용 닉네임 조회
+	User selectUserByNickname(String nickname);
 }

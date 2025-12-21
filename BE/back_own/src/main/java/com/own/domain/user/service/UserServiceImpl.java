@@ -88,5 +88,18 @@ public class UserServiceImpl implements UserService {
 				user.getTierLevel()
 		);
 	}
+	public boolean isEmailDuplicate(String email) {
+		User user = userDao.selectUserByEmail(email);
+		//유저가 존재하면 중복 (true) 없으면 사용 가능(false)
+		return user != null;
+	}
+	
+	public boolean isNicknameDuplicate(String nickname) {
+		User user = userDao.selectUserByNickname(nickname);
+		//유저가 존재하면 중복 (true) 없으면 사용 가능(false)
+		return user != null; 
+	}
+	
+	
 
 }

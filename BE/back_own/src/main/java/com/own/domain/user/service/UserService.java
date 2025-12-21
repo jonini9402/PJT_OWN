@@ -28,5 +28,10 @@ public interface UserService {
 	// 로그인
 	UserResponse login(UserLoginRequest request, HttpSession session);
 		
+	// 이메일 중복 체크
+	boolean isEmailDuplicate(String email);
+
+	// 닉네임 중복 체크 
+	boolean isNicknameDuplicate(String nickname);
 	
 }
