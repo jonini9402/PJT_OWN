@@ -11,7 +11,6 @@ public class User {
 	private String password;
 	private String profileImg;
 	private int tierLevel;
-	private int userPostCount;
 	private LocalDateTime deletedAt;
 	private boolean status;
 	
@@ -25,7 +24,7 @@ public class User {
 	}
 	
 	public User(int userId, String name, String nickname, String email, String password, String profileImg,
-			int tierLevel, int userPostCount, LocalDateTime deletedAt, boolean status) {
+			int tierLevel, LocalDateTime deletedAt, boolean status) {
 		this.userId = userId;
 		this.name = name;
 		this.nickname = nickname;
@@ -33,7 +32,6 @@ public class User {
 		this.password = password;
 		this.profileImg = profileImg;
 		this.tierLevel = tierLevel;
-		this.userPostCount = userPostCount;
 		this.deletedAt = deletedAt;
 		this.status = status;
 	}
@@ -76,12 +74,6 @@ public class User {
 	}
 	public void setTierLevel(int tierLevel) {
 		this.tierLevel = tierLevel;
-	}
-	public int getUserPostCount() {
-		return userPostCount;
-	}
-	public void setUserPostCount(int userPostCount) {
-		this.userPostCount = userPostCount;
 	}
 	public LocalDateTime getDeletedAt() {
 		return deletedAt;

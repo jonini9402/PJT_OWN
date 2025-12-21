@@ -28,4 +28,7 @@ public interface UserDao {
 	
 	//로그인용 닉네임 조회
 	User selectUserByNickname(String nickname);
+	
+	//게시글 수 조회
+	public int countPostsByUserId(int userId);
 }
