@@ -46,10 +46,28 @@
         <if test="lastPostId != null"> 
             AND p.post_id &lt; #{lastPostId}  </if>
     </sql>
+    
+    <!-- 감정 태그 가져오기 -->
+    <select id="selectEmotionTagsByPostId" resultType="string">
+    SELECT et.emotion_name
+    FROM post_emotion_type pet
+    JOIN emotion_type et ON pet.emotion_type_id = et.emotion_type_id
+    WHERE pet.post_id = #{postId}
+	</select>
+	
+	<!-- DTO와 DB 결과를 매핑해주는 설정 -->
+	<resultMap id="PostResponseMap" type="com.own.domain.post.dto.response.PostResponse" autoMapping="true">
+    <id property="postId" column="postId"/>
+   
+    <collection property="emotionTags" column="postId" 
+                select="selectEmotionTagsByPostId" 
+                javaType="java.util.List" ofType="string"/>
+	</resultMap>
+    
 	
 	
 	 <!--  전체 포스트 조회 -->
-    <select id="findAll" resultType="com.own.domain.post.dto.response.PostResponse">
+    <select id="findAll" resultMap="PostResponseMap">
         SELECT 
             <include refid="selectPostDetails"/>
         FROM post p
@@ -62,7 +80,7 @@
          </select>
 
 	<!--  특정 유저가 작성한 포스트 조회 -->
-    <select id="findByUserId" resultType="com.own.domain.post.dto.response.PostResponse">
+    <select id="findByUserId" resultMap="PostResponseMap">
         SELECT 
             <include refid="selectPostDetails"/>
         FROM post p
@@ -75,7 +93,7 @@
     </select>
 
 	<!-- 특정 유저가 좋아요한 포스트 조회 -->
-    <select id="findLikedPosts" resultType="com.own.domain.post.dto.response.PostResponse">
+    <select id="findLikedPosts" resultMap="PostResponseMap">
         SELECT 
             <include refid="selectPostDetails"/>
         FROM post p
@@ -89,7 +107,7 @@
     </select>
 
 	<!-- 특정 유저가 북마크한 포스트 조회 -->
-    <select id="findBookmarkedPosts" resultType="com.own.domain.post.dto.response.PostResponse">
+    <select id="findBookmarkedPosts" resultMap="PostResponseMap">
         SELECT 
             <include refid="selectPostDetails"/>
         FROM post p
@@ -191,7 +209,4 @@
 	</select>
 	
 	
-	
-
-
 </mapper>

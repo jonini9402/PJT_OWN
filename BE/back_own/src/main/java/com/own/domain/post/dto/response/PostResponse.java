@@ -11,7 +11,7 @@ public class PostResponse {
 	private int tierLevel;
 	
 	private int workoutTag;
-	private List <Integer> emotionTags; 
+	private List <String> emotionTags; 
 	private String caption;
 	
 	private String musicTitle;
@@ -28,7 +28,7 @@ public class PostResponse {
 	}
 	
 	public PostResponse(int postId, LocalDateTime createdAt, String nickname, String profileImg, int tierLevel,
-			int workoutTag, List<Integer> emotionTags, String caption, String musicTitle, String albumImg, int duration,
+			int workoutTag, List<String> emotionTags, String caption, String musicTitle, String albumImg, int duration,
 			String previewUrl, int likeCnt, int bookmarkCnt, boolean isLiked, boolean isBookmarked) {
 		super();
 		this.postId = postId;
@@ -84,10 +84,10 @@ public class PostResponse {
 	public void setWorkoutTag(int workoutTag) {
 		this.workoutTag = workoutTag;
 	}
-	public List<Integer> getEmotionTags() {
+	public List<String> getEmotionTags() {
 		return emotionTags;
 	}
-	public void setEmotionTags(List<Integer> emotionTags) {
+	public void setEmotionTags(List<String> emotionTags) {
 		this.emotionTags = emotionTags;
 	}
 	public String getCaption() {
