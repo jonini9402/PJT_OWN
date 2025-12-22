@@ -21,7 +21,7 @@
     <div class="post-content">
       <div class="tags">
         <span class="tag workout-tag" v-if="workoutName">{{ workoutName }}</span>
-        <span v-for="id in post.emotionTag" :key="id" class="tag emotion-tag" >{{ getEmotionName(id) }}</span>
+        <span v-for="id in post.emotionTags" :key="id" class="tag emotion-tag" >{{ getEmotionName(id) }}</span>
       </div>
       <p class="caption">{{ post.caption }}</p>
     </div>
@@ -58,13 +58,19 @@ const formatDate = (dateArray) => {
 };
 
 const workoutName = computed(() => {
+  // 1. 스토어에 데이터가 없거나 post 데이터가 없을 때를 대비한 방어 코드
+  if (!createStore.workoutTags || !props.post?.workoutTag) return "운동"; 
+  
   const found = createStore.workoutTags.find(t => t.workoutTypeId === props.post.workoutTag);
-  return found.workoutName; 
+  
+  // 2. 찾지 못했을 경우(undefined)를 위해 옵셔널 체이닝(?.)과 기본값 처리
+  return found?.workoutName || "운동"; 
 });
 
 const getEmotionName = (id) => {
-  const found = createStore.emotionTags.find(t => t.emotionTypeId === id);
-  return found.emotionName;
+  if (!createStore.allEmotionTags) return "";
+  const found = createStore.allEmotionTags.find(t => t.emotionTypeId === id);
+  return found?.emotionName || "";
 }
 
 // 좋아요/북마크 상태
@@ -143,7 +149,7 @@ onMounted(async () => {
 
 <style scoped>
 .post-item {
-  background: white;
+  background: rgb(214, 50, 50);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 20px;

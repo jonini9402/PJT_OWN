@@ -61,7 +61,7 @@ const searchQuery = ref('');
 const searchResults = ref([]);
 const isSearching = ref(false);
 
-const spotifyToken = 'BQD63vKL_zt8hxertwQW8dZUlhCx2T6-laErlPpyGwOLAKWKasSrRTx_5KLENbkNs7_CRjJajverSfgB7QiPenkjwbh7R-vF4TeEChcjcl18oeUJIWzFGyxrZtr99Fw-klOkQA92k70';
+const spotifyToken = 'BQC1iqqpMBtKvbVKukt9RF5hPNu2NM58u6TVRinOQq91E3bvVbH8ZSJSpEhlx5Em4ULP0Yw-V1RyzD2tFg40aM5SyxqwGLIwyWUSONns-cLOr6cQt6dnNtVBjVmAQXNG63fkYxwp0PY';
 
 const handleSearch = async () => {
     if (!searchQuery.value.trim()) return;
@@ -104,28 +104,28 @@ const confirmSelection = (music) => {
     console.log("선택된 음악:", createStore.selectedMusic);
 };
 
-// const getTemporaryToken = async () => {
-//   const clientId = '41753e8381d14ace9eaf71a3e0c01870';
-//   const clientSecret = 'f72dcaae55184cba9828075e5629032d';
+const getTemporaryToken = async () => {
+  const clientId = '41753e8381d14ace9eaf71a3e0c01870';
+  const clientSecret = 'f72dcaae55184cba9828075e5629032d';
 
-//   const params = new URLSearchParams();
-//   params.append('grant_type', 'client_credentials');
+  const params = new URLSearchParams();
+  params.append('grant_type', 'client_credentials');
 
-//   const response = await fetch('https://accounts.spotify.com/api/token', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/x-www-form-urlencoded',
-//       'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret)
-//     },
-//     body: params
-//   });
+  const response = await fetch('https://accounts.spotify.com/api/token', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'Basic ' + btoa(clientId + ':' + clientSecret)
+    },
+    body: params
+  });
 
-//   const data = await response.json();
-//   console.log("새로운 토큰입니다:", data.access_token);
-// };
+  const data = await response.json();
+  console.log("새로운 토큰입니다:", data.access_token);
+};
 
-// // 실행
-// getTemporaryToken();
+// 실행
+getTemporaryToken();
 
 </script>
 

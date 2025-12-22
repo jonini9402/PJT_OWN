@@ -45,7 +45,7 @@ const fetchWeeklyCount = async () => {
 }
 
 const goToCreatePage = () => {
-    
+    router.push('/post/create');
 }
 
 onMounted(fetchWeeklyCount)

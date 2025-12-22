@@ -23,8 +23,12 @@
     import { useCreateStore } from '@/stores/create';
     import { createPost } from '@/api/post';
     import { saveMusicToDb } from '@/api/music';
+    import { useRouter } from 'vue-router';
+    import { useAuthStore } from '@/stores/auth';
 
     const createStore = useCreateStore();
+    const authStore = useAuthStore();
+    const router = useRouter();
 
     const handleSubmit = async () => {
 
@@ -52,13 +56,14 @@
 
         // 2단계: 포스트 생성 (musicId는 서버에서 받은 값 사용)
         const postPayload = {
+            userId: authStore.userId,
             workoutTag: createStore.workoutTag?.workoutTypeId, // Integer로 전송
-            emotionTags: createStore.emotionTag.map(tag => tag.emotionTypeId),
+            emotionTags: createStore.selectedEmotionTags.map(tag => tag.emotionTypeId),
 
             musicId: savedMusicId,
             caption: createStore.caption.trim(),
 
-            spotifyTrackUrl: `https://open.spotify.com/track/${createStore.selectedMusic.spotifyTrackId}`
+            spotifyTrackUrl: `http://googleusercontent.com/spotify.com/${createStore.selectedMusic.spotifyTrackId}`
         };
 
         console.log("2. 포스트 생성 요청:", postPayload);
@@ -68,8 +73,8 @@
         alert("운동일지가 등록되었습니다!");
         createStore.resetData();
         
-        // 필요시 메인 페이지로 이동
-        // router.push('/');
+        // 메인 페이지로 이동
+        router.push('/');
         
     } catch (error) {
         console.error("저장 실패:", error);

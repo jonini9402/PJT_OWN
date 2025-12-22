@@ -16,12 +16,24 @@ export const getUserPosts = (userId, params) => {
 }
 
 // 특정 유저가 좋아요한 게시글 조회
+export const getLikedPosts = (userId, params) => {
+    return instance.get(`/post/likes/${userId}`, { params });
+}
 
 // 특정 유저가 북마크한 게시글 조회
+export const getBookmarkedPosts = (userId, params) => {
+    return instance.get(`/post/bookmark/${userId}`, { params });
+}
 
 // 게시글 수정
+export const updatePost = (postId, postData) => {
+    return instance.put(`/post/${postId}`, postData);
+}
 
 // 게시글 삭제
+export const deletePost = (postId) => {
+    return instance.delete(`/post/${postId}`);
+}
 
 // 노래 랭킹 함수 호출
 export const getMusicRank = () => {

@@ -8,8 +8,8 @@ export const useCreateStore = defineStore('create', () => {
   const currentStep = ref(1);
   const workoutTags = ref([]);
   const workoutTag = ref('');
-  const emotionTags = ref([]);
-  const emotionTag = ref([]);
+  const allEmotionTags = ref([]);
+  const selectedEmotionTags = ref([]);
   const selectedMusic = ref(null);
   const caption = ref('');
 
@@ -27,19 +27,24 @@ export const useCreateStore = defineStore('create', () => {
   const fetchEmotionTags = async () => {
     try {
       const response = await getEmotionTags();
-      emotionTags.value = response.data;
+      allEmotionTags.value = response.data;
     } catch(error) {
       console.error("감정 태그 로드 실패", error);
     }
   }
 
-  const toggleEmotion = (tagName) => {
-    const index = emotionTag.value.indexOf(tagName);
+  //객체 배열에서 ID로 중복 체크
+  const toggleEmotion = (tag) => {
+    const index = selectedEmotionTags.value.findIndex(e => e.emotionTypeId === tag.emotionTypeId);
+    
     if(index > -1) {
-      emotionTag.value.splice(index,1);
+      selectedEmotionTags.value.splice(index, 1);
     } else {
-      if(emotionTag.value.length < 5) {
-        emotionTag.value.push(tagName);
+      if(selectedEmotionTags.value.length < 5) {
+        selectedEmotionTags.value.push({
+          emotionTypeId: tag.emotionTypeId,
+          emotionName: tag.emotionName
+        });
       } else {
         alert("감정 태그는 최대 5개까지 선택 가능합니다");
       }
@@ -50,10 +55,10 @@ export const useCreateStore = defineStore('create', () => {
   const resetData = () => {
     currentStep.value = 1;
     workoutTag.value = '';
-    emotionTag.value = [];
+    selectedEmotionTags.value = [];
     selectedMusic.value = null;
     caption.value = '';
   };
 
-  return { currentStep, workoutTag, emotionTag, selectedMusic, caption, setStep, resetData, workoutTags, fetchWorkoutTags, emotionTags, fetchEmotionTags, toggleEmotion };
+  return { currentStep, workoutTag, selectedEmotionTags, selectedMusic, caption, setStep, resetData, workoutTags, fetchWorkoutTags, allEmotionTags, fetchEmotionTags, toggleEmotion };
 });

@@ -1,7 +1,7 @@
 <template>
     <div class="step-container">
         <h2>운동하면서 어떤 감정이 들었나요?</h2>
-        <div v-if="createStore.emotionTags.length === 0" class="loading">
+        <div v-if="createStore.allEmotionTags.length === 0" class="loading">
             감정 태그 불러오는 중...
         </div>
 
@@ -13,7 +13,7 @@
                         v-for="tag in group"
                         :key="tag.emotionTypeId"
                         :class="['tag-btn', {active: isSelected(tag.emotionTypeId)}]"
-                        @click="toggleEmotion(tag)"
+                        @click="handleEmotion(tag)"
                         >
                         {{ tag.emotionName }}
                     </button>
@@ -22,11 +22,11 @@
         </div>
 
         <div class="selected-summary">
-            <div v-if="createStore.emotionTag.length === 0" class="placeholder">
+            <div v-if="createStore.selectedEmotionTags.length === 0" class="placeholder">
                 태그를 선택해주세요.
             </div>
             <div v-else class="selected-tags">
-                <span v-for="emotion in createStore.emotionTag" :key="emotion.emotionTypeId" class="badge">
+                <span v-for="emotion in createStore.selectedEmotionTags" :key="emotion.emotionTypeId" class="badge">
                     #{{ emotion.emotionName }}
                 </span>
             </div>
@@ -35,7 +35,7 @@
         <div class="nav-btn">
             <button
                 @click="next"
-                :disabled="createStore.emotionTag.length === 0"
+                :disabled="createStore.selectedEmotionTags.length === 0"
                 class="next-btn"
                 > 다음 </button>
         </div>
@@ -53,7 +53,7 @@ onMounted(() => {
 })
 
 const groupedEmotions = computed(() => {
-    const all = createStore.emotionTags;
+    const all = createStore.allEmotionTags;
     if(all.length === 0) return {};
 
     return {
@@ -65,29 +65,16 @@ const groupedEmotions = computed(() => {
 });
 
 const isSelected = (emotionTypeId) => {
-    return createStore.emotionTag.some(e => e.emotionTypeId === emotionTypeId);
+    return createStore.selectedEmotionTags.some(e => e.emotionTypeId === emotionTypeId);
 };
 
-const toggleEmotion = (tag) => {
-    const index = createStore.emotionTag.findIndex(e => e.emotionTypeId === tag.emotionTypeId);
-    
-    if (index > -1) {
-        // 이미 선택됨 -> 제거
-        createStore.emotionTag.splice(index, 1);
-    } else {
-        // 선택 안됨 -> 추가
-        createStore.emotionTag.push({
-            emotionTypeId: tag.emotionTypeId,
-            emotionName: tag.emotionName
-        });
-    }
-    
-    console.log("현재 선택된 감정 태그:", createStore.emotionTag);
+const handleEmotion = (tag) => {
+    createStore.toggleEmotion(tag);
 };
 
 const next = () => {
-    if (createStore.emotionTag.length > 0) {
-        console.log("Step2 완료 - 선택된 태그:", createStore.emotionTag);
+    if (createStore.selectedEmotionTags.length > 0) {
+        console.log("Step2 완료 - 선택된 태그:", createStore.selectedEmotionTags);
         createStore.setStep(3);
     }
 };

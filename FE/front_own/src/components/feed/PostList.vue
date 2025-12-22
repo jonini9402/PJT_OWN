@@ -60,5 +60,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.loading-trigger { height: 50px; display: flex; justify-content: center; align-items: center; }
+.loading-trigger { height: 80px; display: flex; justify-content: center; align-items: center; }
 </style>

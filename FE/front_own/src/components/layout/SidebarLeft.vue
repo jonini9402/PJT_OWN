@@ -11,7 +11,7 @@
 
     <!-- 메뉴 -->
     <nav class="menu">
-      <router-link to="/feed" class="menu-item">
+      <router-link to="/" class="menu-item">
         <span class="menu-label">피드</span>
       </router-link>
 
