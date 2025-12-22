@@ -28,20 +28,22 @@
     </div>
 
     <!-- 오른쪽 사이드바 -->
-    <!-- <SidebarRight /> -->
+    <SidebarRight /> 
   </div>
 </template>
 
 <script>
 import ProfileHeader from '@/components/mypage/ProfileHeader.vue';
 import SidebarLeft from '@/components/layout/SidebarLeft.vue';
+import SidebarRight from '@/components/layout/SidebarRight.vue';
 
 export default {
   name: 'MyPage',
   
   components: {
     ProfileHeader,
-    SidebarLeft
+    SidebarLeft,
+    SidebarRight
   },
 
   data() {

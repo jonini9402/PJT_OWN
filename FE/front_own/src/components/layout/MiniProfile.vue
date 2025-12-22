@@ -1,68 +1,32 @@
 <template>
-  <div class="mini-profile">
+  <div class="mini-profile" v-if="nickname">
     <div class="profile-image">
-      <img :src="userInfo.profileImg || '/default-profile.png'" alt="프로필" />
+      <img :src="profileImg" alt="프로필" />
     </div>
-    <p class="nickname">{{ userInfo.nickname }}</p>
+    
+    <p class="nickname">{{ nickname }}</p>
+    
     <div class="tier-badge" :class="tierClass">
       {{ tierLabel }}
     </div>
   </div>
+  
+  <div class="mini-profile" v-else>
+    <p style="color: #999;">로딩중...</p>
+  </div>
 </template>
 
-<script>
-export default {
-  name: 'MiniProfile',
+<script setup>
+import { computed } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 
-  data() {
-    return {
-      userInfo: {
-        nickname: '',
-        profileImg: '',
-        tierLevel: 0
-      }
-    }
-  },
+const authStore = useAuthStore();
 
-  computed: {
-    tierLabel() {
-      if (this.userInfo.tierLevel === 3) return 'Pro';
-      if (this.userInfo.tierLevel === 2) return 'Amateur';
-      return 'Newbie';
-    },
-
-    tierClass() {
-      if (this.userInfo.tierLevel === 3) return 'tier-pro';
-      if (this.userInfo.tierLevel === 2) return 'tier-amateur';
-      return 'tier-newbie';
-    }
-  },
-
-  methods: {
-    async fetchUserInfo() {
-      try {
-        const response = await fetch('http://localhost:8080/api/user/me', {
-          credentials: 'include'
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          this.userInfo = {
-            nickname: data.nickname,
-            profileImg: data.profileImg,
-            tierLevel: data.tierLevel
-          };
-        }
-      } catch (error) {
-        console.error('사용자 정보 조회 실패:', error);
-      }
-    }
-  },
-
-  mounted() {
-    this.fetchUserInfo();
-  }
-}
+// computed로 getter 값들을 받아오기
+const nickname = computed(() => authStore.nickname);
+const profileImg = computed(() => authStore.profileImg || '/default-profile.png');
+const tierLabel = computed(() => authStore.tierLabel);
+const tierClass = computed(() => authStore.tierClass);
 </script>
 
 <style scoped>

@@ -5,16 +5,20 @@
         <h1>회원가입</h1>
 
         <div class="signup-form">
-          <!-- 프로필 아바타 선택 -->
-          <div class="profile-image">
-            <div
-              v-for="img in profileImages"
-              :key="img"
-              class="image-placeholder"
-              :class="{ selected: profileImg === img }"
-              @click="selectProfile(img)"
-            >
-              <img :src="img" />
+          <!-- 프로필 이미지 선택 영역 (클릭하면 모달 열림) -->
+          <div class="profile-image-section" @click="openModal">
+            <div class="profile-preview">
+              <div class="profile-image-wrapper">
+                <img 
+                  v-if="profileImg" 
+                  :src="profileImg" 
+                  alt="선택된 프로필 이미지" 
+                />
+                <div v-else class="empty-image">
+                  <span>+</span>
+                </div>
+              </div>
+              <p class="image-label">프로필 이미지 선택</p>
             </div>
           </div>
           <p v-if="imageError" class="field-error">{{ imageError }}</p>
@@ -81,18 +85,36 @@
         </div>
       </div>
     </div>
+     <!-- 프로필 이미지 선택 모달 -->
+    <ProfileImageModal 
+      :isOpen="isModalOpen"
+      :images="profileImages"
+      :currentImage="profileImg"
+      @select="handleImageSelect"
+      @close="closeModal"
+    />
   </div>
 </template>
 
 <script>
+import ProfileImageModal from '@/components/ProfileImageModal.vue';
 import {
   signup,
   checkEmailDuplicate,
   checkNicknameDuplicate,
 } from "@/api/user.js";
+import avatar1 from '@/assets/images/avatar1.png';
+import avatar2 from '@/assets/images/avatar2.png';
+import avatar3 from '@/assets/images/avatar3.png';
+import avatar4 from '@/assets/images/avatar4.png';
+import avatar5 from '@/assets/images/avatar5.png';
+import avatar6 from '@/assets/images/avatar6.png';
 
 export default {
   name: "SignupPage",
+  components:{
+    ProfileImageModal
+  },
   data() {
     return {
       email: "",
@@ -103,11 +125,16 @@ export default {
       profileImg: "",
 
       profileImages: [
-        "/images/avatar1.png",
-        "/images/avatar2.png",
-        "/images/avatar3.png",
-        "/images/avatar4.png",
+        avatar1,
+        avatar2,
+        avatar3,
+        avatar4,
+        avatar5,
+        avatar6,
       ],
+
+      // 모달 상태
+      isModalOpen: false,
 
       // 각 필드별 에러 메시지
       emailError: "",
@@ -122,6 +149,18 @@ export default {
     };
   },
   methods: {
+  // 모달 열기/닫기
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    handleImageSelect(selectedImage) {
+      this.profileImg = selectedImage;
+      this.imageError = "";
+    },
+
     selectProfile(imgUrl) {
       this.profileImg = imgUrl;
       this.imageError = "";
@@ -221,31 +260,6 @@ export default {
       return true;
     },
 
-     // 이메일 중복 체크
-  async checkEmailDuplicate(email) {
-    try {
-      const response = await fetch(`http://localhost:8080/check-email?email=${email}`);
-      const isDuplicate = await response.json();
-      return { data: isDuplicate }; // true면 중복, false면 사용 가능
-    } catch (error) {
-      console.error('이메일 중복 체크 실패:', error);
-      throw error;
-    }
-  },
-
-  // 닉네임 중복 체크
-  async checkNicknameDuplicate(nickname) {
-    try {
-      const response = await fetch(`http://localhost:8080/check-nickname?nickname=${nickname}`);
-      const isDuplicate = await response.json();
-      return { data: isDuplicate }; // true면 중복, false면 사용 가능
-    } catch (error) {
-      console.error('닉네임 중복 체크 실패:', error);
-      throw error;
-    }
-  },
-
-
     async handleSignup() {
       if (!this.profileImg) {
         this.imageError = "프로필 이미지를 선택해주세요";
@@ -310,35 +324,61 @@ export default {
   font-size: 28px;
 }
 
-.profile-image {
-  display: flex;
-  justify-content: center;
+/* 프로필 이미지 선택 영역 */
+.profile-image-section {
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
-.image-placeholder {
-  width: 80px;
-  height: 80px;
+.profile-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border: 2px dashed rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.profile-preview:hover {
+  border-color: #333;
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.profile-image-wrapper {
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 12px;
   background-color: #f0f0f0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
-  cursor: pointer;
-  overflow: hidden;
-  position: relative;
 }
 
-.image-placeholder img {
+.profile-image-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.image-placeholder:hover {
-  background-color: #e0e0e0;
+.empty-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #999;
 }
+
+.image-label {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+}
+
 .signup-form input {
   width: 100%;
   padding: 14px;
@@ -359,7 +399,6 @@ export default {
   border-bottom-color: #333;
 }
 
-/* 필드별 에러 메시지 (빨간색) */
 .field-error {
   color: #d32f2f;
   font-size: 12px;

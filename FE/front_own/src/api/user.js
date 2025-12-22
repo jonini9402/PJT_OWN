@@ -13,23 +13,19 @@ export function login(email, password) {
 }
 
 export function signup(userData){
-    return instance.post(`/user/signup`, formData,{
-        headers: {
-      'Content-Type': 'multipart/form-data'
-        }
-    });
+    return instance.post(`/user/signup`, userData);
 }
 // 이메일 중복 체크
 export function checkEmailDuplicate(email) {
-  return instance.get(`/check-email`, {
-    params: { email: email }
+  return instance.get(`/user/check-email`, {
+    params: { email}
   });
 }
 
 // 닉네임 중복 체크 
 export function checkNicknameDuplicate(nickname) {
-  return instance.get(`/check-nickname`, {
-    params: { nickname: nickname }
+  return instance.get(`/user/check-nickname`, {
+    params: { nickname }
   });
 }
 
