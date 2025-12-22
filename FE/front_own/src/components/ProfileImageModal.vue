@@ -1,44 +1,36 @@
 <template>
   <div v-if="isOpen" class="modal-overlay" @click="closeModal">
     <div class="modal-content" @click.stop>
-      <h2>프로필 이미지 선택</h2>
-      
+      <h2>프로필 캐릭터를 선택하세요</h2>
+
       <div class="image-grid">
-        <div 
-          v-for="(image, index) in images" 
+        <button
+          v-for="(image, index) in images"
           :key="index"
           class="image-item"
           :class="{ selected: selectedImage === image }"
-          @click="selectImage(image)"
+          @click="selectAndConfirm(image)"
         >
           <img :src="image" :alt="`프로필 ${index + 1}`" />
-        </div>
+          <span v-if="selectedImage === image" class="check">✔</span>
+        </button>
       </div>
-      
+
       <div class="modal-buttons">
         <button @click="closeModal" class="cancel-btn">취소</button>
-        <button @click="confirmSelection" class="confirm-btn">선택</button>
       </div>
     </div>
   </div>
 </template>
 
+
 <script>
 export default {
   name: 'ProfileImageModal',
   props: {
-    isOpen: {
-      type: Boolean,
-      required: true
-    },
-    images: {
-      type: Array,
-      required: true
-    },
-    currentImage: {
-      type: String,
-      default: ''
-    }
+    isOpen: Boolean,
+    images: Array,
+    currentImage: String
   },
   data() {
     return {
@@ -46,20 +38,13 @@ export default {
     }
   },
   methods: {
-    selectImage(image) {
+    selectAndConfirm(image) {
       this.selectedImage = image;
-    },
-    confirmSelection() {
-      this.$emit('select', this.selectedImage);
+      this.$emit('select', image);
       this.closeModal();
     },
     closeModal() {
       this.$emit('close');
-    }
-  },
-  watch: {
-    currentImage(newVal) {
-      this.selectedImage = newVal;
     }
   }
 }
@@ -68,84 +53,62 @@ export default {
 <style scoped>
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 2000;
 }
 
 .modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
   background: white;
-  padding: 30px;
-  border-radius: 12px;
-  max-width: 500px;
-  width: 90%;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-h2 {
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.image-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-bottom: 20px;
+  padding: 32px;
+  border-radius: 16px;
+  width: 480px;
+  max-width: 90%;
 }
 
 .image-item {
+  position: relative;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 6px;
   cursor: pointer;
-  border: 3px solid transparent;
-  border-radius: 8px;
-  padding: 5px;
-  transition: all 0.2s;
+  background: none;
+  transition: transform 0.15s, border-color 0.15s;
 }
 
 .image-item:hover {
-  border-color: #ddd;
+  transform: scale(1.05);
 }
 
 .image-item.selected {
   border-color: #4CAF50;
-  background-color: #f0f8f0;
+  transform: scale(1.08);
 }
 
 .image-item img {
   width: 100%;
-  height: 100px;
+  height: 110px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
-.modal-buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-}
-
-.cancel-btn, .confirm-btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.cancel-btn {
-  background-color: #f5f5f5;
-  color: #333;
-}
-
-.confirm-btn {
-  background-color: #4CAF50;
+.check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: #4CAF50;
   color: white;
+  font-size: 14px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

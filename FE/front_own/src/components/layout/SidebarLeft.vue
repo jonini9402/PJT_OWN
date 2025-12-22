@@ -3,7 +3,7 @@
     <!-- 로고 -->
     <div class="logo">
       <div class="logo-icon">로고</div>
-      <h1>OWN</h1>
+      <!--<h1>OWN</h1> -->
     </div>
 
     <!-- 미니 프로필 컴포넌트 -->
@@ -12,11 +12,11 @@
     <!-- 메뉴 -->
     <nav class="menu">
       <router-link to="/" class="menu-item">
-        <span class="menu-label">피드</span>
+        <span class="menu-label">홈</span>
       </router-link>
 
       <router-link to="/mypage" class="menu-item">
-        <span class="menu-label">마이페이지</span>
+        <span class="menu-label">마이 로그</span>
       </router-link>
     </nav>
 
@@ -29,6 +29,7 @@
 
 <script>
 import MiniProfile from '@/components/layout/MiniProfile.vue';
+import { useAuthStore } from '@/stores/auth';
 
 export default {
   name: 'SidebarLeft',
@@ -46,11 +47,22 @@ export default {
         });
 
         if (response.ok) {
+          // authStore에서 사용자 정보 삭제
+          const authStore = useAuthStore();
+          authStore.clearUser();
+          
+          console.log('로그아웃 성공');
           alert('로그아웃되었습니다');
+          
+          //로그인 페이지로 이동
           this.$router.push('/login');
+        } else {
+          console.error('로그아웃 실패:', response.status);
+          alert('로그아웃에 실패했습니다.');
         }
       } catch (error) {
-        console.error('로그아웃 실패:', error);
+        console.error('로그아웃 에러:', error);
+        alert('로그아웃 중 오류가 발생했습니다.');
       }
     }
   }
