@@ -28,17 +28,19 @@
 
 <script setup>
 
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { getWeeklyCount } from '@/api/post';
 
 const router = useRouter();
+const route = useRoute();
 const workoutCount = ref(0);
 
 const fetchWeeklyCount = async () => {
     try {
         const response = await getWeeklyCount();
         workoutCount.value = response.data;
+        console.log('이번주 운동 횟수:', workoutCount.value);
     } catch (error) {
         console.error("데이터 로드 실패", error);
     }
@@ -48,9 +50,15 @@ const goToCreatePage = () => {
     router.push('/post/create');
 }
 
-onMounted(fetchWeeklyCount)
+// 컴포넌트 마운트 시 데이터 로드
+onMounted(fetchWeeklyCount);
 
-
+// 라우트 변경 감지 - 포스트 작성 후 돌아왔을 때 업데이트
+watch(() => route.path, (newPath) => {
+    if (newPath === '/' || newPath === '/mypage') {
+        fetchWeeklyCount();
+    }
+});
 
 </script>
 
@@ -85,7 +93,7 @@ onMounted(fetchWeeklyCount)
 }
 
 .percentage {
-    /* fill: #fff; */
+    fill: #fff;
     font-size: 0.5em;
     text-anchor: middle;
     font-weight: bold;
@@ -94,6 +102,7 @@ onMounted(fetchWeeklyCount)
 .stats-label {
     text-align: center;
     font-size: 14px;
+    color: #ddd;
 }
 
 .write-log-btn {
@@ -113,14 +122,12 @@ onMounted(fetchWeeklyCount)
   box-shadow: 0 4px 15px rgba(29, 185, 84, 0.2);
 }
 
-/* 호버 효과: 은은한 발광 및 위로 들림 */
 .write-log-btn:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(29, 185, 84, 0.4);
   filter: brightness(1.1);
 }
 
-/* 클릭 효과: 꾹 눌리는 느낌 */
 .write-log-btn:active {
   transform: scale(0.96);
   box-shadow: 0 2px 10px rgba(29, 185, 84, 0.3);

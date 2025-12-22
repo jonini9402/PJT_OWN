@@ -33,6 +33,26 @@ export const useCreateStore = defineStore('create', () => {
     }
   }
 
+    // 추가: 운동 태그 로드 (PostItem에서 사용)
+  const loadWorkoutTags = async () => {
+    if (workoutTags.value.length > 0) return; // 이미 로드했으면 스킵
+    await fetchWorkoutTags();
+  };
+
+  // 추가: 감정 태그 로드 (PostItem에서 사용)
+  const loadEmotionTags = async () => {
+    if (allEmotionTags.value.length > 0) return; // 이미 로드했으면 스킵
+    await fetchEmotionTags();
+  };
+
+  // 추가: 둘 다 한 번에 로드
+  const loadAllTags = async () => {
+    await Promise.all([
+      loadWorkoutTags(),
+      loadEmotionTags()
+    ]);
+  };
+
   //객체 배열에서 ID로 중복 체크
   const toggleEmotion = (tag) => {
     const index = selectedEmotionTags.value.findIndex(e => e.emotionTypeId === tag.emotionTypeId);
@@ -51,7 +71,6 @@ export const useCreateStore = defineStore('create', () => {
     }
   }
 
-
   const resetData = () => {
     currentStep.value = 1;
     workoutTag.value = '';
@@ -60,5 +79,9 @@ export const useCreateStore = defineStore('create', () => {
     caption.value = '';
   };
 
-  return { currentStep, workoutTag, selectedEmotionTags, selectedMusic, caption, setStep, resetData, workoutTags, fetchWorkoutTags, allEmotionTags, fetchEmotionTags, toggleEmotion };
+  return { currentStep, workoutTag, selectedEmotionTags, selectedMusic, caption, setStep, resetData, workoutTags, fetchWorkoutTags, allEmotionTags, fetchEmotionTags, toggleEmotion, loadWorkoutTags,
+    loadEmotionTags,   
+    loadAllTags       
+};
 });
+

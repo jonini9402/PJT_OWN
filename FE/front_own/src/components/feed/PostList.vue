@@ -1,6 +1,6 @@
 <template>
   <div class="post-list">
-    <PostItem v-for="post in posts" :key="post.id" :post="post" />
+    <PostItem v-for="post in posts" :key="post.postId" :post="post" />
 
     <div ref="loadMoreTrigger" class="loading-trigger">
       <p v-if="loading">데이터를 불러오는 중...</p>
@@ -45,10 +45,14 @@ const fetchPosts = async () => {
   
 };
 
-// Intersection Observer 설정 -> 무한 스크롤
+
 onMounted(() => {
+ // 첫 데이터 로드
+  fetchPosts();
+
+// Intersection Observer 설정 -> 무한 스크롤
   const observer = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) {
+    if (entries[0].isIntersecting && !loading.value) {
       fetchPosts();
     }
   }, { threshold: 1.0 });
@@ -60,5 +64,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.loading-trigger { height: 80px; display: flex; justify-content: center; align-items: center; }
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.loading-trigger { 
+  height: 80px; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+}
 </style>

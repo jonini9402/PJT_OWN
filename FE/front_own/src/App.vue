@@ -22,14 +22,35 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { useCreateStore } from '@/stores/create';
 import SidebarLeft from './components/layout/SidebarLeft.vue';
 import SidebarRight from './components/layout/SidebarRight.vue';
 
 const route = useRoute();
+const authStore = useAuthStore();
+const createStore = useCreateStore();
 
 const isDefaultLayout = computed(() => route.meta.layout === 'DefaultLayout');
+
+onMounted(async () => {
+  console.log('🚀 앱 초기화 시작...');
+  
+  // 1. 유저 정보 복원 (localStorage에서)
+  authStore.restoreUser();
+  
+  // 2. 세션 확인 및 최신 유저 정보 가져오기
+  if (authStore.isLoggedIn) {
+    await authStore.fetchUser();
+  }
+  
+  // 3. 운동/감정 태그 데이터 로드 (앱 시작 시 한 번만)
+  await createStore.loadAllTags();
+  
+  console.log('앱 초기화 완료!');
+});
 </script>
 
 <style scoped>

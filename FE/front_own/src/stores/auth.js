@@ -1,16 +1,15 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useAuthStore = defineStore('auth', {
-  //상태 (데이터)
-   state: () => ({
-    user: null, //유저 정보 객체
+  // 상태 (데이터)
+  state: () => ({
+    user: null, // 유저 정보 객체
     isLoggedIn: false
-   }),
+  }),
 
   getters: {
     // 유저 ID
-    userId: (state) => state.user?.userId || null,
+    userId: (state) => state.user?.userId || state.user?.id || null, // id 필드명 호환성 추가
     
     // 이메일
     email: (state) => state.user?.email || '',
@@ -47,7 +46,6 @@ export const useAuthStore = defineStore('auth', {
     }
   },
 
-  // Actions (메서드)
   actions: {
     /**
      * 로그인 - 유저 정보 저장
@@ -85,12 +83,59 @@ export const useAuthStore = defineStore('auth', {
     },
 
     /**
-     * 로그아웃 - 유저 정보 삭제
+     * 로컬 유저 정보 삭제 (내부용)
      */
     clearUser() {
       this.user = null;
       this.isLoggedIn = false;
       localStorage.removeItem('own_user');
+    },
+
+    /**
+     * 로그아웃
+     * - 서버에 로그아웃 요청을 보낸 후 로컬 정보를 삭제합니다.
+     */
+    async logout() {
+      try {
+        // 서버 로그아웃 API 호출
+        await fetch('http://localhost:8080/api/user/logout', { 
+            method: 'POST',
+            credentials: 'include' 
+        });
+      } catch (e) {
+        console.error('로그아웃 요청 실패(세션 만료 등):', e);
+      } finally {
+        // 성공하든 실패하든 클라이언트 정보는 지운다
+        this.clearUser();
+      }
+    },
+
+    /**
+     * 회원 탈퇴
+     * 서버에 회원 삭제 요청을 보내고 성공 시 로그아웃 처리합니다.
+     */
+    async withdraw() {
+      // ID가 없으면 실행 불가
+      if (!this.userId) return false;
+
+      try { //백엔드에서 회원 탈퇴 메서드 호출
+        const response = await fetch(`http://localhost:8080/api/user/${this.userId}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+
+        if (response.ok) {
+          // 탈퇴성공 시 로컬 정보 즉시 삭제
+          this.clearUser();
+          return true;
+        } else {
+          console.error('회원 탈퇴 실패: 서버 응답 오류');
+          return false;
+        }
+      } catch (error) {
+        console.error('회원 탈퇴 요청 중 에러 발생:', error);
+        return false;
+      }
     },
 
     /**

@@ -1,28 +1,29 @@
 <template>
   <div class="profile-header">
     <div class="profile-left">
-      <!-- 프로필 이미지 -->
       <div class="profile-image">
         <img :src="userInfo.profileImg || '/default-profile.png'" alt="프로필" />
       </div>
       
-      <!-- 등급 배지 -->
       <div class="tier-badge" :class="tierClass">
         {{ tierLabel }}
       </div>
     </div>
 
     <div class="profile-right">
-      <!-- 닉네임 & 등급 태그 -->
       <div class="profile-top">
-        <h2 class="nickname">{{ userInfo.nickname }}</h2>
-        <span class="tier-tag" :class="tierClass">{{ tierLabel }}</span>
+        <div class="name-group">
+          <h2 class="nickname">{{ userInfo.nickname }}</h2>
+          <span class="tier-tag" :class="tierClass">{{ tierLabel }}</span>
+        </div>
+        
+        <button class="edit-profile-btn" @click="goToEditPage">
+          회원정보 수정
+        </button>
       </div>
 
-      <!-- 게시물 수 -->
       <p class="post-count">{{ userInfo.postCount }} posts</p>
 
-      <!-- 탭 메뉴 -->
       <div class="tab-menu">
         <button 
           v-for="tab in tabs" 
@@ -61,14 +62,12 @@ export default {
   },
 
   computed: {
-    // 등급에 따른 라벨
     tierLabel() {
       if (this.userInfo.tierLevel === 3) return 'Pro';
       if (this.userInfo.tierLevel === 2) return 'Amateur';
       return 'Newbie';
     },
     
-    // 등급에 따른 CSS 클래스
     tierClass() {
       if (this.userInfo.tierLevel === 3) return 'tier-pro';
       if (this.userInfo.tierLevel === 2) return 'tier-amateur';
@@ -84,7 +83,7 @@ export default {
 
       try {
         const response = await fetch(url, {
-          credentials: 'include' // 세션 쿠키 포함
+          credentials: 'include' 
         });
         
         if (!response.ok) {
@@ -108,13 +107,16 @@ export default {
 
     changeTab(tabId) {
       this.currentTab = tabId;
-      // 부모 컴포넌트에 탭 변경 알림
       this.$emit('tab-changed', tabId);
+    },
+
+    // 회원정보 수정 페이지로 이동
+    goToEditPage() {
+      this.$router.push('/mypage/edit');
     }
   },
 
   mounted() {
-    // 내 프로필 정보 가져오기
     this.fetchUserProfile();
   }
 }
@@ -160,27 +162,27 @@ export default {
   font-size: 14px;
 }
 
-.tier-pro {
-  background-color: #2E3781;
-}
-
-.tier-amateur {
-  background-color: #E1603F;
-}
-
-.tier-newbie {
-  background-color: #F3DBC8;
-}
+.tier-pro { background-color: #2E3781; }
+.tier-amateur { background-color: #E1603F; }
+.tier-newbie { background-color: #F3DBC8; }
 
 .profile-right {
   flex: 1;
 }
 
+/* 양끝 정렬을 위해 수정 */
 .profile-top {
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: space-between; /* 닉네임은 왼쪽, 버튼은 오른쪽 */
   margin-bottom: 10px;
+}
+
+/* 닉네임과 태그를 묶어주는 그룹 */
+.name-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .nickname {
@@ -196,6 +198,24 @@ export default {
   border-radius: 4px;
   font-size: 13px;
   font-weight: bold;
+}
+
+/* 회원수정 버튼 스타일 */
+.edit-profile-btn {
+  background-color: #333;
+  color: #ccc;
+  border: 1px solid #444;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-profile-btn:hover {
+  background-color: #444;
+  color: white;
+  border-color: #666;
 }
 
 .post-count {

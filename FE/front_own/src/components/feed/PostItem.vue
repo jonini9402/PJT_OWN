@@ -1,8 +1,12 @@
 <template>
-  <div class="post-item">
+   <div class="post-item" v-if="post">
     <div class="post-header">
       <div class="user-info">
-        <img :src="post.userProfile" class="user-avatar" />
+        <img 
+          :src="post.userProfile || '/default-profile.png'" 
+          class="user-avatar" 
+          alt="프로필"
+        />
         <div class="user-meta">
           <span class="user-nickname">{{ post.nickname || '익명' }}</span>
           <span class="tier-badge" v-if="post.tierLevel">{{ post.tierLevel }}</span>
@@ -11,19 +15,28 @@
       </div>
     </div>
 
-    <MusicCardFeed :music="{
-      musicTitle: post.musicTitle,
-      artist: post.artist,
-      albumImg: post.albumImg,
-      previewUrl: post.previewUrl
-    }" />
+    <MusicCardFeed 
+      v-if="post.musicTitle"
+      :music="{
+        musicTitle: post.musicTitle,
+        artist: post.artist,
+        albumImg: post.albumImg,
+        previewUrl: post.previewUrl
+      }" 
+    />
 
     <div class="post-content">
       <div class="tags">
         <span class="tag workout-tag" v-if="workoutName">{{ workoutName }}</span>
-        <span v-for="id in post.emotionTags" :key="id" class="tag emotion-tag" >{{ getEmotionName(id) }}</span>
+        <span 
+          v-for="tag in (post.emotionTags || [])" 
+          :key="tag" 
+          class="tag emotion-tag"
+          >
+        {{ tag }}
+      </span>
       </div>
-      <p class="caption">{{ post.caption }}</p>
+      <p class="caption">{{ post.caption || '' }}</p>
     </div>
 
     <div class="post-actions">
@@ -37,6 +50,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { computed, ref, onMounted } from 'vue';
 import MusicCardFeed from '@/components/post/MusicCardFeed.vue';
@@ -46,32 +60,43 @@ import { addLike, removeLike, checkLiked } from '@/api/like';
 import { addBookmark, removeBookmark, checkBookmarked } from '@/api/bookmark';
 
 const props = defineProps({
-  post: Object
+  post: {
+    type: Object,
+    required: true
+  }
 });
+
 
 const createStore = useCreateStore();
 const authStore = useAuthStore();
 
 const formatDate = (dateArray) => {
-  if(!dateArray) return '방금 전';
-  return new Date(dateArray).toLocaleDateString();
+  if (!dateArray) return '방금 전';
+  
+  try {
+    // dateArray가 배열인 경우 [2025, 12, 23, 14, 30, 0]
+    if (Array.isArray(dateArray)) {
+      const [year, month, day] = dateArray;
+      return `${year}.${month}.${day}`;
+    }
+    // 문자열이나 Date 객체인 경우
+    return new Date(dateArray).toLocaleDateString('ko-KR');
+  } catch (error) {
+    return '방금 전';
+  }
 };
 
 const workoutName = computed(() => {
-  // 1. 스토어에 데이터가 없거나 post 데이터가 없을 때를 대비한 방어 코드
-  if (!createStore.workoutTags || !props.post?.workoutTag) return "운동"; 
+  if (!createStore.workoutTags || !props.post?.workoutTag) {
+    return "운동";
+  }
   
-  const found = createStore.workoutTags.find(t => t.workoutTypeId === props.post.workoutTag);
+  const found = createStore.workoutTags.find(
+    t => t.workoutTypeId === props.post.workoutTag
+  );
   
-  // 2. 찾지 못했을 경우(undefined)를 위해 옵셔널 체이닝(?.)과 기본값 처리
-  return found?.workoutName || "운동"; 
+  return found?.workoutName || "운동";
 });
-
-const getEmotionName = (id) => {
-  if (!createStore.allEmotionTags) return "";
-  const found = createStore.allEmotionTags.find(t => t.emotionTypeId === id);
-  return found?.emotionName || "";
-}
 
 // 좋아요/북마크 상태
 const isLiked = ref(false);
@@ -131,7 +156,15 @@ const toggleBookmark = async () => {
 };
 
 onMounted(async () => {
-  if (authStore.isLoggedIn) {
+// createStore 데이터 로드 (아직 안 되어 있다면)
+  if (!createStore.workoutTags || createStore.workoutTags.length === 0) {
+    await createStore.loadWorkoutTags();
+  }
+  if (!createStore.allEmotionTags || createStore.allEmotionTags.length === 0) {
+    await createStore.loadEmotionTags();
+  }
+
+  if (authStore.isLoggedIn && props.post?.postId) {
     try {
       // 좋아요 눌렀는지 확인
       const likedResponse = await checkLiked(props.post.postId, authStore.userId);
@@ -145,6 +178,7 @@ onMounted(async () => {
     }
   }
 });
+
 </script>
 
 <style scoped>
