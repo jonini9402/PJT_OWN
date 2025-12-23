@@ -15,16 +15,20 @@ status BOOLEAN NOT NULL DEFAULT true
 -- 10_user_dummy.sql
 -- 사용자 더미 데이터
 
-INSERT INTO users (name, nickname, email, password, profile_img, tier_level, user_post_count, status) 
+ INSERT INTO users (name, nickname, email, password, profile_img, tier_level, user_post_count, status) 
 VALUES
-    ('김철수', 'ironman123', 'chulsoo.kim@email.com', '$2a$10$abcdefghijklmnopqrstuv', 'https://example.com/profile1.jpg', 3, 15, true),
-    ('이영희', 'yogaqueen', 'younghee.lee@email.com', '$2a$10$bcdefghijklmnopqrstuvw', 'https://example.com/profile2.jpg', 2, 8, true),
-    ('박민수', 'runner_park', 'minsu.park@email.com', '$2a$10$cdefghijklmnopqrstuvwx', 'https://example.com/profile3.jpg', 4, 25, true),
-    ('정수진', 'climb_sujin', 'sujin.jung@email.com', '$2a$10$defghijklmnopqrstuvwxy', 'https://example.com/profile4.jpg', 1, 3, true),
-    ('최동현', 'boxer_choi', 'donghyun.choi@email.com', '$2a$10$efghijklmnopqrstuvwxyz', 'https://example.com/profile5.jpg', 5, 42, true),
-    ('강민지', 'dance_minji', 'minji.kang@email.com', '$2a$10$fghijklmnopqrstuvwxyza', 'https://example.com/profile6.jpg', 2, 12, true),
-    ('윤서준', 'cycle_yoon', 'seojun.yoon@email.com', '$2a$10$ghijklmnopqrstuvwxyzab', 'https://example.com/profile7.jpg', 3, 18, true),
-    ('임하은', 'mountain_haeun', 'haeun.lim@email.com', '$2a$10$hijklmnopqrstuvwxyzabc', 'https://example.com/profile8.jpg', 1, 5, true),
-    ('송지훈', 'fitness_song', 'jihoon.song@email.com', '$2a$10$ijklmnopqrstuvwxyzabcd', 'https://example.com/profile9.jpg', 4, 30, true),
-    ('한소희', 'yoga_sohee', 'sohee.han@email.com', '$2a$10$jklmnopqrstuvwxyzabcde', 'https://example.com/profile10.jpg', 2, 10, true);
-
+    ('김도현', '근손실오기전에', 'dohyun.kim@email.com', '$2a$10$abcdefghijklmnopqrstuv', '/src/assets/images/avatar1.png', 2, 15, true),
+    ('이지아', '숨쉬기운동만20년', 'jiah.lee@email.com', '$2a$10$bcdefghijklmnopqrstuvw', '/src/assets/images/avatar5.png', 1, 8, true),
+    ('박민수', '한강러닝크루회장', 'minsu.park@email.com', '$2a$10$cdefghijklmnopqrstuvwx', '/src/assets/images/avatar3.png', 3, 45, true),
+    ('정수진', '볼더링꿈나무', 'sujin.jung@email.com', '$2a$10$defghijklmnopqrstuvwxy', '/src/assets/images/avatar4.png', 1, 3, true),
+    ('최동현', '언더아머단속반', 'donghyun.choi@email.com', '$2a$10$efghijklmnopqrstuvwxyz', '/src/assets/images/avatar6.png', 3, 32, true),
+    ('강민지', '스트릿댄서', 'minji.kang@email.com', '$2a$10$fghijklmnopqrstuvwxyza', '/src/assets/images/avatar5.png', 2, 12, true),
+    ('윤서준', '따릉이폭주족', 'seojun.yoon@email.com', '$2a$10$ghijklmnopqrstuvwxyzab', '/src/assets/images/avatar1.png', 2, 18, true),
+    ('임하은', '벽타는고양이', 'haeun.lim@email.com', '$2a$10$hijklmnopqrstuvwxyzabc', '/src/assets/images/avatar2.png', 1, 5, true),
+    ('송지훈', '헬스장지박령', 'jihoon.song@email.com', '$2a$10$ijklmnopqrstuvwxyzabcd', '/src/assets/images/avatar3.png', 3, 50, true),
+    ('한소희', '바른자세', 'sohee.han@email.com', '$2a$10$jklmnopqrstuvwxyzabcde','/src/assets/images/avatar5.png', 2, 10, true),
+    ('정재훈', '득근득근거려', 'jh.jung@email.com', '$2a$10$abcdefghijklmnopqrstuv', '/src/assets/images/avatar1.png', 3, 42, true),
+    ('김지영', '거북목교정중', 'jy.kim@email.com', '$2a$10$bcdefghijklmnopqrstuvw', '/src/assets/images/avatar2.png', 2, 14, true),
+    ('이현우', '이제막런린이', 'hw.lee@email.com', '$2a$10$cdefghijklmnopqrstuvwx', '/src/assets/images/avatar3.png', 1, 4, true),
+    ('박수연', '핵주먹수연', 'sy.park@email.com', '$2a$10$defghijklmnopqrstuvwxy', '/src/assets/images/avatar4.png', 2, 19, true),
+    ('최준호', '산신령', 'jh.choi@email.com', '$2a$10$efghijklmnopqrstuvwxyz', '/src/assets/images/avatar6.png', 3, 55, true);
