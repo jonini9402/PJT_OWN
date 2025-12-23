@@ -54,22 +54,29 @@ import MusicCardSearch from '../post/MusicCardSearch.vue';
 import MusicPlayer from '../post/MusicPlayer.vue';
 import { useCreateStore } from '@/stores/create';
 import { searchSpotify } from '@/api/music';
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
 
 const createStore = useCreateStore();
 const searchQuery = ref('');
 const searchResults = ref([]);
 const isSearching = ref(false);
 
-const spotifyToken = 'BQCFpmpo-zEiNv-yUrSPODLlfk4m2_4ZW0Nc7BVHRxxpJzsAVt6XzlqpsLx0B_vay8Htv54p-BQAk2YmLW4neZTOmyy6lUIfTuVj3BjUKprRLFzwbiSSH-tX5OCH5wB15CU9nJgYn0wN3lNKMmdhyemPIVhoQmAdqC8DB3CCT9U-44GHSQsqlqF3itVC3bEFPQII7wf6FzHQ330NfECA-Zav8HjGK_L-C8';
+//바뀔 수 있는 ref변수, 빈 값으로 초기화
+const spotifyToken = ref('');
 
 const handleSearch = async () => {
     if (!searchQuery.value.trim()) return;
 
+    //체크- 토큰이 아직 없으면 검색하지 않음
+    if (!spotifyToken.value) {
+        alert("토큰 발급 중입니다. 잠시만 기다려주세요.");
+        await getTemporaryToken(); // 없으면 강제로 발급시도
+    }
     isSearching.value = true;
 
     try {
-        const response = await searchSpotify(searchQuery.value, spotifyToken);
+        //spotifyToken.value로 최신 값을 사용하도록 변경
+        const response = await searchSpotify(searchQuery.value, spotifyToken.value);
 
         searchResults.value = response.data.tracks.items.map(track => ({
             spotifyTrackId: track.id,
@@ -111,6 +118,7 @@ const getTemporaryToken = async () => {
   const params = new URLSearchParams();
   params.append('grant_type', 'client_credentials');
 
+  try {
   const response = await fetch('https://accounts.spotify.com/api/token', {
     method: 'POST',
     headers: {
@@ -121,11 +129,17 @@ const getTemporaryToken = async () => {
   });
 
   const data = await response.json();
-  console.log("새로운 토큰입니다:", data.access_token);
-};
+  spotifyToken.value = data.access_token;
 
-// 실행
-getTemporaryToken();
+  console.log("새로운 토큰입니다:", data.access_token);
+}catch (e) {
+      console.error("토큰 발급 실패:", e);
+  }
+};
+// 실행 -> 화면이 켜지자마자 토큰을 받아오도록 설정
+onMounted(() => {
+    getTemporaryToken();
+});
 
 </script>
 

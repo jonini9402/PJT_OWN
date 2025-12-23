@@ -1,10 +1,12 @@
 import axios from 'axios';
 
 const spotifyApi = axios.create({
-    baseURL: 'https://api.spotify.com/v1',
+    baseURL: 'https://api.spotify.com/v1',                                                                                       
 });
 
 export const searchSpotify = (query, token) => {
+    const cleanToken = token ? token.trim() : '';
+
     return spotifyApi.get('/search', {
         params: {
             q: query,
@@ -12,7 +14,7 @@ export const searchSpotify = (query, token) => {
             limit: 10
         },
         headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${cleanToken}`
         }
     });
 };

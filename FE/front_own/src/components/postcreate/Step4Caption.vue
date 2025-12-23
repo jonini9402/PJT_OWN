@@ -5,7 +5,7 @@
         <div class="caption-area">
             <textarea
               v-model="createStore.caption"
-              placeholder="새로운 동작을 해냈다.  아이유의 가을 아침과 함께 운동한 덕분 :) "
+              :placeholder="placeholderText";
               maxlength="400"
             ></textarea>
         </div>
@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-
+    import { computed } from 'vue';
     import { useCreateStore } from '@/stores/create';
     import { createPost } from '@/api/post';
     import { saveMusicToDb } from '@/api/music';
@@ -29,6 +29,12 @@
     const createStore = useCreateStore();
     const authStore = useAuthStore();
     const router = useRouter();
+
+    const placeholderText = computed(() => {
+    const title = createStore.selectedMusic?.musicTitle || '음악';
+    return `"${title}"의 리듬에 맞춰 움직인 오늘, 어떤 기분이 드셨나요?`;
+    });
+
 
     const handleSubmit = async () => {
 
@@ -59,11 +65,9 @@
             userId: authStore.userId,
             workoutTag: createStore.workoutTag?.workoutTypeId, // Integer로 전송
             emotionTags: createStore.selectedEmotionTags.map(tag => tag.emotionTypeId),
-
             musicId: savedMusicId,
             caption: createStore.caption.trim(),
-
-            spotifyTrackUrl: `https://open.spotify.com/track/${createStore.selectedMusic.spotifyTrackId}`
+            spotifyTrackUrl: `https://open.spotify.com/track/$${createStore.selectedMusic.spotifyTrackId}`
         };
 
         console.log("2. 포스트 생성 요청:", postPayload);
