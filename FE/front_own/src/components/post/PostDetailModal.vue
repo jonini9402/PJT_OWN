@@ -44,11 +44,15 @@
                 </div>
                 
                 <div class="like-bookmark-count">
-                    <span>❤️: {{ post.likeCount }}</span>
-                    <span>🔖: {{ post.bookmarkCount }}</span>
+                    <span>❤️ {{ post.likeCount }}</span>
+                    <span>🔖 {{ post.bookmarkCount }}</span>
                 </div>
-
+           <div class="action-buttons">
+            <button class="delete-btn" @click="deletePost">삭제하기</button>
+         </div>
             </div>
+
+
 
         </div>
 
@@ -67,7 +71,7 @@ const props = defineProps({
     post: Object,
 })
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['close', 'post-deleted']);
 const createStore = useCreateStore();
 
 const workoutName = computed(() => {
@@ -107,6 +111,30 @@ const formatPostDate = (date) => {
     return `${postDate.getFullYear()}년 ${postDate.getMonth() + 1}월 ${postDate.getDate()}일`;
 };
 
+const deletePost = async () => {
+  if (!confirm("정말 이 게시글을 삭제하시겠습니까? 복구할 수 없습니다.")) {
+    return;
+  }
+
+  try {
+    // URL은 실제 백엔드 주소에 맞게 확인 필요 (post_id를 보냄)
+    const response = await fetch(`http://localhost:8080/api/post/${props.post.postId}`, {
+      method: 'DELETE',
+      credentials: 'include', // 세션/쿠키 인증 시 필수
+    });
+
+    if (response.ok) {
+      alert("게시글이 삭제되었습니다.");
+      emit('close');         // 모달 닫기
+      emit('post-deleted');  // 목록 새로고침을 위해 부모에게 알림
+    } else {
+      throw new Error('삭제 실패');
+    }
+  } catch (error) {
+    console.error("삭제 에러:", error);
+    alert("삭제 중 오류가 발생했습니다.");
+  }
+};
 
 </script>
 
@@ -126,8 +154,8 @@ const formatPostDate = (date) => {
 
 .modal-content {
   display: flex;
-  width: 80%;
-  height: 80%;
+  width: 40%;
+  height: 70%;
   background-color: white;
   border-radius: 12px;
   overflow: hidden;
@@ -143,14 +171,14 @@ const formatPostDate = (date) => {
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #333;
+  color: #676767;
   cursor: pointer;
   z-index: 10;
 }
 
 /* 음악 섹션 */
 .music-section {
-  width: 50%;
+  width: 40%;
   padding: 20px;
   color: white;
   display: flex;
@@ -163,15 +191,15 @@ const formatPostDate = (date) => {
 }
 
 .album-img-container {
-  width: 100%;
-  height: 200px;
+  width: 90%;
+  height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .album-img {
-  width: 80%;
+  width: 100%;
   height: auto;
   border-radius: 8px;
 }
@@ -186,12 +214,12 @@ const formatPostDate = (date) => {
 }
 
 .music-title h3 {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin: 10px 0;
 }
 
 .artist {
-  font-size: 1rem;
+  font-size: 0.8rem;
 }
 
 .spotify-btn {
@@ -211,8 +239,8 @@ const formatPostDate = (date) => {
 }
 
 .preview-btn {
-  background-color: #333;
-  color: white;
+  background-color: #7a7a7a;
+  color: rgb(97, 97, 97);
   padding: 10px;
   border-radius: 8px;
   margin-top: 20px;
@@ -223,24 +251,29 @@ const formatPostDate = (date) => {
 .post-section {
   background-color: #181818;
   width: 50%;
-  padding: 20px;
+  padding: 24px;
   overflow-y: auto;
+  color: #fff;
 }
 
 .post-date {
-  font-size: 1.2rem;
+ font-size: 1.1rem;
   margin-bottom: 10px;
+  color: #ffffff;        
+  font-weight:natural;
 }
 
 .divider {
   border: none;
-  border-top: 1px solid #ddd;
-  margin: 20px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  margin: 15px 0;
 }
 
 .caption {
-  font-size: 1rem;
-  color: #333;
+  font-size: 0.9rem;
+  color: #ffffff;
+  line-height: 1.6;
+  font-weight:lighter;
 }
 
 .tags-section {
@@ -256,7 +289,7 @@ const formatPostDate = (date) => {
 }
 
 .emotion-tag {
-  background: #e0e0e0;
+  background: #7d7d7d;
   padding: 6px 12px;
   border-radius: 20px;
   margin-right: 8px;
@@ -264,12 +297,37 @@ const formatPostDate = (date) => {
 }
 
 .like-bookmark-count {
+  display: flex;
+  align-items: center;
+  gap: 20px;
   margin-top: 20px;
-  font-size: 1rem;
+  width: 100%;
 }
 
 .like-bookmark-count span {
-  display: block;
+gap: 6px;
+color: #fff;
 }
 
+.action-buttons {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  margin-top: 30px;          /* 위 요소와 간격 */
+}
+
+.delete-btn {
+  background-color: transparent;
+  color: #444444;            /* 경고색*/
+  border: 1px solid #2f2f2f;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: #a8a8a8;
+  color: white;
+}
 </style>

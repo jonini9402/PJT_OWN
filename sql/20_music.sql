@@ -15,18 +15,16 @@ preview_url VARCHAR(255) NULL
 
 INSERT INTO music (spotify_track_id, title, artist, album_img, duration, preview_url) 
 VALUES
-    ('2KH16WveTKzjQmzrod9HjI', 'Eye of the Tiger', 'Survivor', 'https://i.scdn.co/image/ab67616d0000b273676c326084a91942d4a5155f', 246, NULL),
-    ('0VjIjW4GlUZAMYd2vXMi3b', 'Blinding Lights', 'The Weeknd', 'https://i.scdn.co/image/ab67616d0000b273c56411516cb1004a433d739e', 200, NULL),
+    ('2KH16WveTQWT6KOG9Rg6e2', 'Eye of the Tiger', 'Survivor', 'https://i.scdn.co/image/ab67616d0000b273f4a2ccbe20d6d52f16816812', 246, NULL),
     ('5ChkMS8OtdzJeqyybCc9R5', 'Lose Yourself', 'Eminem', 'https://i.scdn.co/image/ab67616d0000b2736ca5c90113b30c3c43ffb8f4', 326, NULL),
     ('4xkOaSrkexMciUUogZKVTS', 'Till I Collapse', 'Eminem', 'https://i.scdn.co/image/ab67616d0000b2736ca5c90113b30c3c43ffb8f4', 297, NULL),
     ('3bidbhpOYeV4knp8AIu8Xn', 'Can\'t Hold Us', 'Macklemore', 'https://i.scdn.co/image/ab67616d0000b273266850d2446d3e74e402095f', 258, NULL),
-    ('4fzsfWzRhpQzqzChEaQ423', 'Stronger', 'Kanye West', 'https://i.scdn.co/image/ab67616d0000b2730b9122a275210926d7f2a1eb', 311, NULL),
+    ('0j2T0R9dR9qdJYsB7ciXhf', 'Stronger', 'Kanye West', 'https://i.scdn.co/image/ab67616d0000b27326f7f19c7f0381e56156c94a', 311, NULL),
     ('32OlwWuMpZ6b0aN2RZOeMS', 'Uptown Funk', 'Mark Ronson', 'https://i.scdn.co/image/ab67616d0000b273f7692484c2db1c5e9336d8d9', 269, NULL),
     ('7qiZfU4dY1lWllzX7mPBI', 'Shape of You', 'Ed Sheeran', 'https://i.scdn.co/image/ab67616d0000b273ba5db46f4b838ef6027e6f96', 233, NULL),
     ('1zi7xx7UVEFkmKfv06H8x0', 'One Dance', 'Drake', 'https://i.scdn.co/image/ab67616d0000b27393aeec22f9602e3b2e987114', 173, NULL),
     ('5UqCQaDshqbIk3pkhy4Pjg', 'Levels', 'Avicii', 'https://i.scdn.co/image/ab67616d0000b273347f8796839353982794eb09', 203, NULL),
     ('7KXjTSCq5nL1LoYtL7XAwS', 'HUMBLE.', 'Kendrick Lamar', 'https://i.scdn.co/image/ab67616d0000b273cdb645498cd3d9a2163344af', 177, NULL),
     ('2Fxmhks0bxGSBdJ92vM42m', 'bad guy', 'Billie Eilish', 'https://i.scdn.co/image/ab67616d0000b27350a3147b4edd7701a439184b', 194, NULL),
-    ('3hvSFyq1uTqV7f3wV9n45j', 'Super Bass', 'Nicki Minaj', 'https://i.scdn.co/image/ab67616d0000b273b567d147d3c0199736c4ac8f', 200, NULL),
-    ('7MXVkk9YMctZqd1Srtv4MB', 'Starboy', 'The Weeknd', 'https://i.scdn.co/image/ab67616d0000b2734718e28d24227b9dc7491763', 230, NULL),
-    ('0e7ipj03S05BNilyu5bRzt', 'Rockstar', 'Post Malone', 'https://i.scdn.co/image/ab67616d0000b27355404f712deb84d56c50a697', 218, NULL);
+    ('3hlksXnvbKogFdPbpO9vel', 'Super Bass', 'Nicki Minaj', 'https://i.scdn.co/image/ab67616d0000b273aa7d2641af0fa4c1f76fafbf', 200, NULL),
+    ('7MXVkk9YMctZqd1Srtv4MB', 'Starboy', 'The Weeknd', 'https://i.scdn.co/image/ab67616d0000b2734718e28d24227b9dc7491763', 230, NULL);

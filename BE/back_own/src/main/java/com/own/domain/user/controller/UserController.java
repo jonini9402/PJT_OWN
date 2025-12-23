@@ -54,7 +54,7 @@ public class UserController {
 	@PutMapping("/{userId}")
 	public ResponseEntity<Boolean> update(@PathVariable int userId, @RequestBody UserUpdateRequest user) {
 
-		boolean result = userService.deleteUser(userId);
+		boolean result = userService.updateUser(userId, user);
 
 		return ResponseEntity.ok(result);
 	}

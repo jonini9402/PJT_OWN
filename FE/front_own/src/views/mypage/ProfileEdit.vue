@@ -98,9 +98,9 @@
 
 <script>
 // API 함수 import (deleteUser 추가)
-import { updateUserProfile, deleteUser } from '@/api/user.js';
+import { deleteUser } from '@/api/user.js';
 import ProfileImageModal from '@/components/ProfileImageModal.vue';
-import { useAuthStore } from '@/stores/auth'; // 로그아웃 처리를 위해 스토어 import
+import { useAuthStore } from '@/stores/auth'; // 유저 스토어 import
 
 import avatar1 from '@/assets/images/avatar1.png';
 import avatar2 from '@/assets/images/avatar2.png';
@@ -144,7 +144,7 @@ export default {
       this.profileImg = imgUrl;
       this.imageError = '';
     },
-
+    //유효성 검사 로직
     validateOldPassword() {
       if (this.newPassword && !this.oldPassword) {
         this.oldPasswordError = '기존 비밀번호를 입력하세요';
@@ -197,21 +197,32 @@ export default {
         if (!this.validatePasswordConfirm()) return;
       }
 
+      const authStore = useAuthStore();
+
       try {
+        // 백엔드 DTO 변수명에 맞춰서 데이터 구성
         const updateData = {
-          profileImage: this.profileImg,
+          profileImg: this.profileImg, 
+          
           oldPassword: this.oldPassword || null,
           newPassword: this.newPassword || null,
-          newPasswordConfirm: this.newPasswordConfirm || null
+          newPasswordConfirm: this.newPasswordConfirm || null 
         };
-        const response = await updateUserProfile(this.userId, updateData);
-        if (response.data) {
+
+        // 스토어 액션 실행
+       
+        const success = await authStore.saveProfileToServer(updateData);
+
+        if (success) {
           alert('프로필이 수정되었습니다');
           this.$router.push('/mypage');
+        } else {
+          this.errorMessage = '수정에 실패했습니다. 입력 정보를 확인해주세요.';
         }
+
       } catch (error) {
-        console.error('프로필 수정 실패:', error);
-        this.errorMessage = '프로필 수정에 실패했습니다. 정보를 확인해주세요.';
+        console.error('프로필 수정 에러:', error);
+        this.errorMessage = '서버 오류가 발생했습니다.';
       }
     },
 
@@ -241,18 +252,18 @@ export default {
     },
 
     async fetchCurrentProfile() {
-      try {
-        const response = await fetch('http://localhost:8080/api/user/me', {
-          credentials: 'include'
-        });
-        if (response.ok) {
-          const data = await response.json();
-          this.userId = data.id || data.userId;
-          this.profileImg = data.profileImg;
-          this.originalProfileImg = data.profileImg;
-        }
-      } catch (error) {
-        console.error('프로필 조회 실패:', error);
+      const authStore = useAuthStore();
+      
+      // 스토어에 정보가 없으면 로드 시도
+      if (!authStore.user) {
+         await authStore.fetchUser();
+      }
+
+      // 스토어 정보를 컴포넌트 데이터에 세팅
+      if (authStore.user) {
+        this.userId = authStore.userId;
+        this.profileImg = authStore.profileImg;
+        this.originalProfileImg = authStore.profileImg;
       }
     }
   },

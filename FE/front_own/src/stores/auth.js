@@ -91,6 +91,35 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
+    //서버에 회원정보 수정 요청 보내기
+    async saveProfileToServer(updateData) {
+      if (!this.userId) return false;
+
+      try {
+        // 1. 서버로 PUT요청 전송
+        const response = await fetch(`http://localhost:8080/api/user/${this.userId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', // 세션 유지를 위해 필수
+          body: JSON.stringify(updateData),
+        });
+
+        if (response.ok) {
+          // 2. 서버 저장이 성공하면 내 로컬 스토어 정보도 갱신
+          this.updateUser(updateData); 
+          return true;
+        } else {
+          console.error('서버 저장 실패');
+          return false;
+        }
+      } catch (error) {
+        console.error('회원 정보 수정 중 에러:', error);
+        return false;
+      }
+    },
+
     /**
      * 로컬 유저 정보 삭제
      */

@@ -5,10 +5,7 @@
         <img :src="userInfo.profileImg || '/default-profile.png'" alt="프로필" />
       </div>
       
-      <div class="tier-badge" :class="tierClass">
-        {{ tierLabel }}
       </div>
-    </div>
 
     <div class="profile-right">
       <div class="profile-top">
@@ -54,9 +51,9 @@ export default {
       },
       currentTab: 'journal',
       tabs: [
-        { id: 'journal', label: '나의 운동일지' },
-        { id: 'likes', label: '좋아요 게시물' },
-        { id: 'bookmarks', label: '북마크' }
+        { id: 'journal', label: '마이 포스트' },
+        { id: 'likes', label: '좋아요 포스트' },
+        { id: 'bookmarks', label: '북마크 포스트' }
       ]
     }
   },
@@ -140,26 +137,17 @@ export default {
 }
 
 .profile-image {
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   overflow: hidden;
   background-color: #333;
-  border: 3px solid #444;
 }
 
 .profile-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.tier-badge {
-  padding: 6px 20px;
-  color: white;
-  border-radius: 6px;
-  font-weight: bold;
-  font-size: 14px;
 }
 
 .tier-pro { background-color: #2E3781; }
@@ -187,7 +175,7 @@ export default {
 
 .nickname {
   color: white;
-  font-size: 28px;
+  font-size: 16px;
   margin: 0;
   font-weight: 600;
 }
@@ -196,7 +184,7 @@ export default {
   padding: 4px 14px;
   color: white;
   border-radius: 4px;
-  font-size: 13px;
+  font-size: 10px;
   font-weight: bold;
 }
 
@@ -207,7 +195,7 @@ export default {
   border: 1px solid #444;
   padding: 6px 12px;
   border-radius: 6px;
-  font-size: 13px;
+  font-size: 10px;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -237,7 +225,7 @@ export default {
   border: none;
   cursor: pointer;
   border-bottom: 3px solid transparent;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 500;
   transition: all 0.2s;
 }
