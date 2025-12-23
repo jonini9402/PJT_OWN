@@ -47,7 +47,8 @@ const extractColor = (event) => {
 
 // 이미지 로드 실패 시 대체 이미지로 교체하는 함수
 const handleImageError = (e) => {
-  e.target.src = 'https://via.placeholder.com/50?text=No+Img'; // 혹은 서비스 기본 로고
+  e.target.onerror = null;
+  e.target.src = 'https://placehold.co/50x50?text=No+Img'; // 혹은 서비스 기본 로고
 };
 
 </script>
