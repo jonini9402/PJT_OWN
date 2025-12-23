@@ -13,9 +13,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineProps } from 'vue';
 import PostItem from '@/components/feed/PostItem.vue'; 
 import { getBookmarkedPosts } from '@/api/post';
+
+const props = defineProps({
+  userId: {
+    type: [Number, String],
+    required: true
+  }
+});
 
 const posts = ref([]); 
 const loading = ref(false);
@@ -29,12 +36,13 @@ const fetchPosts = async () => {
   loading.value = true;
   
   try {
-    const params = {
-      size: size,
-      lastPostId: lastPostId.value
-    };
+    const params = { size: size };
+    
+    if (lastPostId.value) {
+      params.lastPostId = lastPostId.value;
+    }
 
-    const response = await getBookmarkedPosts(params);
+    const response = await getBookmarkedPosts(props.userId, params);
     const newPosts = response.data;
 
     if(newPosts.length > 0) {

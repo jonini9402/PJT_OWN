@@ -20,8 +20,8 @@ public class PostResponse {
 	private int duration;
 	private String previewUrl;
 	
-	private int likeCnt;
-	private int bookmarkCnt;
+	private int likeCount;
+	private int bookmarkCount;
 	private boolean isLiked;
 	private boolean isBookmarked;
 	
@@ -30,7 +30,7 @@ public class PostResponse {
 	
 	public PostResponse(int postId, LocalDateTime createdAt, String nickname, String profileImg, int tierLevel,
 			int workoutTag, List<String> emotionTags, String caption, String musicTitle, String albumImg, String artist, int duration,
-			String previewUrl, int likeCnt, int bookmarkCnt, boolean isLiked, boolean isBookmarked) {
+			String previewUrl, int likeCount, int bookmarkCount, boolean isLiked, boolean isBookmarked) {
 		this.postId = postId;
 		this.createdAt = createdAt;
 		this.nickname = nickname;
@@ -44,8 +44,8 @@ public class PostResponse {
 		this.artist = artist;
 		this.duration = duration;
 		this.previewUrl = previewUrl;
-		this.likeCnt = likeCnt;
-		this.bookmarkCnt = bookmarkCnt;
+		this.likeCount = likeCount;
+		this.bookmarkCount = bookmarkCount;
 		this.isLiked = isLiked;
 		this.isBookmarked = isBookmarked;
 	}
@@ -121,17 +121,17 @@ public class PostResponse {
 	public void setPreviewUrl(String previewUrl) {
 		this.previewUrl = previewUrl;
 	}
-	public int getLikeCnt() {
-		return likeCnt;
+	public int getLikeCount() {
+		return likeCount;
 	}
-	public void setLikeCnt(int likeCnt) {
-		this.likeCnt = likeCnt;
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
 	}
-	public int getBookmarkCnt() {
-		return bookmarkCnt;
+	public int getBookmarkCount() {
+		return bookmarkCount;
 	}
-	public void setBookmarkCnt(int bookmarkCnt) {
-		this.bookmarkCnt = bookmarkCnt;
+	public void setBookmarkCnt(int bookmarkCount) {
+		this.bookmarkCount = bookmarkCount;
 	}
 	public boolean isLiked() {
 		return isLiked;
@@ -160,8 +160,8 @@ public class PostResponse {
 		return "PostResponse [postId=" + postId + ", createdAt=" + createdAt + ", nickname=" + nickname
 				+ ", profileImg=" + profileImg + ", tierLevel=" + tierLevel + ", workoutTag=" + workoutTag
 				+ ", emotionTags=" + emotionTags + ", caption=" + caption + ", musicTitle=" + musicTitle + ", albumImg="
-				+ albumImg + ", duration=" + duration + ", previewUrl=" + previewUrl + ", likeCnt=" + likeCnt
-				+ ", bookmarkCnt=" + bookmarkCnt + ", isLiked=" + isLiked + ", isBookmarked=" + isBookmarked + "]";
+				+ albumImg + ", duration=" + duration + ", previewUrl=" + previewUrl + ", likeCount=" + likeCount
+				+ ", bookmarkCount=" + bookmarkCount + ", isLiked=" + isLiked + ", isBookmarked=" + isBookmarked + "]";
 	}
 	
 	

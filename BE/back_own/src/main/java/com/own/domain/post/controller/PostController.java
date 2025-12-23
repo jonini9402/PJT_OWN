@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.own.domain.post.dto.request.PostCreateRequest;
@@ -23,7 +22,6 @@ import com.own.domain.post.dto.request.PostUpdateRequest;
 import com.own.domain.post.dto.response.MusicRankResponse;
 import com.own.domain.post.dto.response.PostResponse;
 import com.own.domain.post.service.PostService;
-import com.own.domain.user.dto.model.User;
 import com.own.global.exception.CustomException;
 import com.own.global.exception.ErrorCode;
 
@@ -47,9 +45,6 @@ public class PostController {
 	        // 2. 로그인되지 않은 경우의 예외 처리 (401 Unauthorized 등)
 	        throw new CustomException(ErrorCode.USER_NOT_FOUND); 
 	    }
-		
-		//테스트용
-//		currentUserId = 1;
 		
 		//가져온 ID를 PostCreateRequest 객체에 설정
 		request.setUserId(currentUserId);
@@ -75,14 +70,14 @@ public class PostController {
 
 	// 특정 유저가 좋아요한 게시글 조회
 	@GetMapping("/likes/{userId}")
-	public ResponseEntity<List<PostResponse>> getLikedPosts(@RequestParam int userId,@ModelAttribute PostSearchRequest request) {
+	public ResponseEntity<List<PostResponse>> getLikedPosts(@PathVariable("userId") Integer userId, @ModelAttribute PostSearchRequest request) {
 		request.setUserId(userId);
 		return ResponseEntity.ok(postService.getLikedPosts(request));
 	}
 
 	// 특정 유저가 북마크한 게시글 조회
 	@GetMapping("/bookmarks/{userId}")
-	public ResponseEntity<List<PostResponse>> getBookmarkedPosts(@RequestParam int userId,@ModelAttribute PostSearchRequest request) {
+	public ResponseEntity<List<PostResponse>> getBookmarkedPosts(@PathVariable("userId") Integer userId, @ModelAttribute PostSearchRequest request) {
 		request.setUserId(userId);
 		return ResponseEntity.ok(postService.getBookmarkedPosts(request));
 	}
@@ -92,7 +87,7 @@ public class PostController {
 	public ResponseEntity<Void> updatePost(@PathVariable int postId, @RequestBody PostUpdateRequest request) {
 		postService.updatePost(postId, request);
 
-		return ResponseEntity.noContent().build();  // 204
+		return ResponseEntity.noContent().build(); //204
 
 	}
 
@@ -101,7 +96,7 @@ public class PostController {
 	public ResponseEntity<Void> deletePost(@PathVariable int postId) {
 		postService.deletePost(postId);
 
-		return ResponseEntity.noContent().build();  // 204
+		return ResponseEntity.noContent().build(); //204
 	}
 	
 	//랭킹조회

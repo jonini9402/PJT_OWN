@@ -22,7 +22,7 @@ export const getLikedPosts = (userId, params) => {
 
 // 특정 유저가 북마크한 게시글 조회
 export const getBookmarkedPosts = (userId, params) => {
-    return instance.get(`/post/bookmark/${userId}`, { params });
+    return instance.get(`/post/bookmarks/${userId}`, { params });
 }
 
 // 게시글 수정

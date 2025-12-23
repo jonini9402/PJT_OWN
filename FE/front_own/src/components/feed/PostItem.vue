@@ -160,7 +160,13 @@ const toggleLike = async () => {
       // 좋아요 취소
       await removeLike(props.post.postId, authStore.userId);
       isLiked.value = false;
-      likeCount.value--;
+
+      // 수정된 부분: 0보다 클때만 1감소, 아니면 0으로 고정
+      if (likeCount.value > 0) {
+        likeCount.value--;
+      } else {
+        likeCount.value = 0;
+      }
     } else {
       // 좋아요 추가
       await addLike(props.post.postId, authStore.userId);
@@ -186,7 +192,12 @@ const toggleBookmark = async () => {
       // 북마크 취소
       await removeBookmark(props.post.postId, authStore.userId);
       isBookmarked.value = false;
-      bookmarkCount.value--;
+      // 수정된 부분: 0보다 클때만 1 감소
+      if (bookmarkCount.value > 0) {
+        bookmarkCount.value--;
+      } else {
+        bookmarkCount.value = 0;
+      }
     } else {
       // 북마크 추가
       await addBookmark(props.post.postId, authStore.userId);

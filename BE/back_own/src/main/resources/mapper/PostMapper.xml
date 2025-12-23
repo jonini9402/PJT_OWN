@@ -26,8 +26,8 @@
         m.duration          AS duration,
         m.preview_url       AS previewUrl,
         
-        (SELECT COUNT(*) FROM user_post_like l WHERE l.post_id = p.post_id) AS likeCnt,
-        (SELECT COUNT(*) FROM user_post_bookmark b WHERE b.post_id = p.post_id) AS bookmarkCnt,
+        (SELECT COUNT(*) FROM user_post_like l WHERE l.post_id = p.post_id) AS likeCount,
+        (SELECT COUNT(*) FROM user_post_bookmark b WHERE b.post_id = p.post_id) AS bookmarkCount,
         
         EXISTS (
             SELECT 1 FROM user_post_like l WHERE l.post_id = p.post_id AND l.user_id = #{loginUserId}
