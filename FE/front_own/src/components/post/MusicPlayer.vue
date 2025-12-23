@@ -39,13 +39,14 @@ const togglePlay = () => {
     } 
     isPlaying.value = !isPlaying.value;
 
-    onBeforeMount(() => {
-        if (audio.value) {
-            audio.value.pause();
-            audio.value = null;
-        }
-    });
 };
+
+onBeforeMount(() => {
+    if (audio.value) {
+        audio.value.pause();
+        audio.value = null;
+    }
+});
 
 
 </script>

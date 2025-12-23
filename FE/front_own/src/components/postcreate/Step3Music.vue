@@ -43,7 +43,7 @@
 
 
         <div class="nav-btns">
-            <button @click="createStore.setStep(4)" :disable="!createStore.selectedMusic">다음</button>
+            <button @click="createStore.setStep(4)" :disabled="!createStore.selectedMusic">다음</button>
         </div>
 
     </div>
@@ -61,7 +61,7 @@ const searchQuery = ref('');
 const searchResults = ref([]);
 const isSearching = ref(false);
 
-const spotifyToken = 'BQBzT8SJCQUR_7ZOfcplmkZvH7JKU5Bzsfk5EfZA0Id1mV8e3qWwB3i4w4-PX5gme5ydPGZ4cXc4KFJCQ6c2H0jH-1k0BakIIWKgWg7iREFYCc12UC0FZI8CCeJDJx2dVV_u9DGlsNk';
+const spotifyToken = 'BQDmZAqaLs-UL1b5MO1qrSr4kptIN7Kl1zpuc_ZUJL0Vq9qwneoFdo5YVL6MTHvHQ3ZMzTWLg_nHJ2z4rbZE3vhHqtkRO8Rk50-tyD2M5omxvuGhGAx_YKj_GARwoAnZxwr6nABF6fM';
 
 const handleSearch = async () => {
     if (!searchQuery.value.trim()) return;
@@ -276,13 +276,13 @@ h2 {
     text-align: center; 
 }
 
-.nav-btns {
+/* .nav-btns {
     display: flex;
     gap: 10px;
     margin-top: 20px;
-}
+} */
 
-.next-btn {
+.next-btns {
     flex: 1;
     background: #333;
     color: white;

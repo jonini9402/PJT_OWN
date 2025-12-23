@@ -22,6 +22,7 @@
         u.tier_level        AS tierLevel,
         m.title             AS musicTitle,
         m.album_img         AS albumImg,
+        m.artist			AS artist,
         m.duration          AS duration,
         m.preview_url       AS previewUrl,
         

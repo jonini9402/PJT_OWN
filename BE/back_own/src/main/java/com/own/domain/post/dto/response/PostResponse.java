@@ -16,6 +16,7 @@ public class PostResponse {
 	
 	private String musicTitle;
 	private String albumImg;
+	private String artist;
 	private int duration;
 	private String previewUrl;
 	
@@ -28,9 +29,8 @@ public class PostResponse {
 	}
 	
 	public PostResponse(int postId, LocalDateTime createdAt, String nickname, String profileImg, int tierLevel,
-			int workoutTag, List<String> emotionTags, String caption, String musicTitle, String albumImg, int duration,
+			int workoutTag, List<String> emotionTags, String caption, String musicTitle, String albumImg, String artist, int duration,
 			String previewUrl, int likeCnt, int bookmarkCnt, boolean isLiked, boolean isBookmarked) {
-		super();
 		this.postId = postId;
 		this.createdAt = createdAt;
 		this.nickname = nickname;
@@ -41,6 +41,7 @@ public class PostResponse {
 		this.caption = caption;
 		this.musicTitle = musicTitle;
 		this.albumImg = albumImg;
+		this.artist = artist;
 		this.duration = duration;
 		this.previewUrl = previewUrl;
 		this.likeCnt = likeCnt;
@@ -144,6 +145,16 @@ public class PostResponse {
 	public void setBookmarked(boolean isBookmarked) {
 		this.isBookmarked = isBookmarked;
 	}
+	
+	
+	public String getArtist() {
+		return artist;
+	}
+
+	public void setArtist(String artist) {
+		this.artist = artist;
+	}
+
 	@Override
 	public String toString() {
 		return "PostResponse [postId=" + postId + ", createdAt=" + createdAt + ", nickname=" + nickname

@@ -17,7 +17,7 @@
         v-for="post in posts" 
         :key="post.postId"
         class="playlist-item"
-        @click="goToDetail(post.postId)"
+        @click="openModal(post)"
       >
         <!-- 재생 아이콘 (호버 시에만 표시) -->
         <div class="play-icon">
@@ -26,7 +26,7 @@
 
         <!-- 앨범 커버 -->
         <div class="album-cover">
-          <img :src="post.albumCover || '/default-album.png'" alt="앨범 커버" />
+          <img :src="post.albumImg || '/default-album.png'" alt="앨범 커버" />
         </div>
 
         <!-- 음악 정보 -->
@@ -41,19 +41,34 @@
         </div>
       </div>
     </div>
+
+    <PostDetailModal
+      v-if="isModalOpen"
+      :post="selectedPost"
+      @close="closeModal"
+    />
+
   </div>
 </template>
 
 <script>
+import PostDetailModal from '@/components/post/PostDetailModal.vue';
+
 export default {
   name: 'TabMyPost',
+
+  components: {
+    PostDetailModal
+  },
 
   data() {
     return {
       posts: [],
       loading: false,
-      userId: null
-    }
+      userId: null,
+      isModalOpen: false,
+      selectedPost: null
+    };
   },
 
   methods: {
@@ -108,7 +123,18 @@ export default {
       const month = String(date.getMonth() + 1).padStart(2, '0');
       const day = String(date.getDate()).padStart(2, '0');
       return `${year}년 ${month}월 ${day}일`;
+    },
+
+    openModal(post) {
+      this.selectedPost = post;
+      this.isModalOpen = true;
+    },
+
+    closeModal() {
+      this.isModalOpen = false;
+      this.selectedPost = null;
     }
+
   },
 
   mounted() {

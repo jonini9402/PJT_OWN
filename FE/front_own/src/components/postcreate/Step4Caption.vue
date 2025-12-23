@@ -63,7 +63,7 @@
             musicId: savedMusicId,
             caption: createStore.caption.trim(),
 
-            spotifyTrackUrl: `http://googleusercontent.com/spotify.com/${createStore.selectedMusic.spotifyTrackId}`
+            spotifyTrackUrl: `https://open.spotify.com/track/${createStore.selectedMusic.spotifyTrackId}`
         };
 
         console.log("2. 포스트 생성 요청:", postPayload);
