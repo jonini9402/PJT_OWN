@@ -114,8 +114,6 @@ defineProps({
 }
 
 .card-container:hover .title {
-  /* 글자 길이가 컨테이너보다 길 때만 작동하게 하려면 JS가 필요하지만, 
-     단순 CSS로는 호버 시 무조건 흐르게 설정 가능합니다. */
   /* animation: marquee 5s linear infinite;
 }
 

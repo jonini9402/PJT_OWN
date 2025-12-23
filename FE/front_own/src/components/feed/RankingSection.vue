@@ -51,12 +51,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.ranking-section { padding: 20px 0; }
+.ranking-section { padding: 20px 0; box-sizing: border-box; width: 100%; overflow: hidden;}
 .section-title { padding: 0 16px; margin-bottom: 16px; font-weight: bold; }
 
 /* Swiper가 담긴 영역의 여백 설정 */
 .my-swiper {
-  padding: 40px 16px 20px 16px; /* 상단 패딩을 크게 주어 커질 때 공간 확보 */
+  padding: 40px 30px 20px 50px; /* 상단 패딩을 크게 주어 커질 때 공간 확보 */
 }
 
 .empty-rank { padding: 40px; text-align: center; color: #999; }

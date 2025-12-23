@@ -1,37 +1,41 @@
 <template>
   <div class="login-page">
+
+    <!-- 배경화면-->
+    <div class="bg-animation"></div>
+
     <div class="login-container">
     <!-- 왼쪽 이미지 영역 -->
-    <div class="image-section"> 
-        <!--목업 이미지 넣어야됨-->
-        <!-- <img src="@/assets/mockup-image.jpg" alt="OWN Mockup" /> -->
-      </div>
-    
-     <!-- 오른쪽: 로그인 폼 -->
-      <div class="form-section">
-        <h1>OWN</h1>
-      <p class="welcome-text">Welcome to OWN</p>
+        <div class="image-section"> 
+            <!--목업 이미지 넣어야됨-->
+            <!-- <img src="@/assets/mockup-image.jpg" alt="OWN Mockup" /> -->
+          </div>
+        
+        <!-- 오른쪽: 로그인 폼 -->
+          <div class="form-section">
+            <h1>OWN</h1>
+          <p class="welcome-text">Welcome to OWN</p>
 
-    <!-- 입력 폼-->
-    <div class="login-form">
-      <input v-model="email" type="email" placeholder="이메일" />
+        <!-- 입력 폼-->
+        <div class="login-form">
+          <input v-model="email" type="email" placeholder="이메일" />
 
-      <input v-model="password" type="password" placeholder="비밀번호" />
-      <button @click="handleLogin">로그인</button>
+          <input v-model="password" type="password" placeholder="비밀번호" />
+          <button @click="handleLogin">로그인</button>
 
-      <!-- 에러 메시지-->
-      <p v-if="errorMessage" class="error">
-        {{ errorMessage }}
-      </p>
-    <!-- 회원가입 링크 -->
-        <p class="register-link">
-          계정이 없으신가요?
-          <router-link to="/signup">가입하기</router-link>
-        </p>
+          <!-- 에러 메시지-->
+          <p v-if="errorMessage" class="error">
+            {{ errorMessage }}
+          </p>
+        <!-- 회원가입 링크 -->
+            <p class="register-link">
+              계정이 없으신가요?
+              <router-link to="/signup">가입하기</router-link>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-        </div>
 </template>
 
 <script>
@@ -104,14 +108,73 @@ export default {
 </script>
 <style scoped>
 .login-page {
-  width: 100%;
+  width: 100vw;
   height: 100vh;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.bg-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* 배경이므로 가장 뒤로 */
+  overflow: hidden;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2),
+    rgba(0, 0, 0, 0.1)
+  );
+}
+
+.bg-animation::before,
+.bg-animation::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    #E1603F,
+    #2E3781,
+    #E1603F,
+    #F3DBC8,
+    #2E3781
+  );
+  transform: translate(-50%, -50%);
+  animation: rotate 8s linear infinite;
+  filter: blur(50px);
+  opacity: 0.8;
+}
+
+.bg-animation::after {
+  width: 180%;
+  height: 180%;
+  animation: rotate-reverse 10s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes rotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes rotate-reverse {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(-360deg); }
 }
 
 .login-container {
+  z-index: 1;
   display: flex;
   width: 80%;
   max-width: 1200px;

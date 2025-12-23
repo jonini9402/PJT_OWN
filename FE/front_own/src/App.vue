@@ -56,18 +56,24 @@ onMounted(async () => {
 <style scoped>
 .app-container {
   display: flex;
+  justify-content: center;
   width: 100%;
   min-height: 100vh;
-  background-color: #000; /* 다크모드 배경 */
+  background-color: #212121; /* 다크모드 배경 */
   color: #fff;
 }
 
 .main-content {
-  flex: 1; /* 중간 영역이 남은 공간을 다 가짐 */
+  flex: 0 0 820px;
+  width: 820px;
   border-left: 1px solid #2a2a2a;
   border-right: 1px solid #2a2a2a;
   height: 100vh;
   overflow-y: auto; /* 본문만 스크롤 가능하게 */
+}
+
+.main-content::-webkit-scrollbar {
+  display: none;
 }
 
 .auth-content {

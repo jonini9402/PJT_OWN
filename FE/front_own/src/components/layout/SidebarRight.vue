@@ -64,7 +64,7 @@ watch(() => route.path, (newPath) => {
 
 <style scoped>
 .sidebar-right {
-    width: 300px;
+    width: 320px;
     padding: 20px;
     display: flex;
     flex-direction: column;
