@@ -49,29 +49,29 @@ defineProps({
 }
 
 .comb-card {
-  width: 90%;
-  background: white;
-  border-radius: 12px;
-  padding: 12px;
+  width: 100%;
+  background: #2a2a2a;
+  padding: 20px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  border: 1px solid #eee;
   display: flex;
   flex-direction: column;
   gap: 10px;
   overflow: hidden;
+  border-radius: 10px;
+  box-sizing: border-box;
 }
 
 .workout-label {
-  font-size: 0.8rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  color: #4f46e5;
-  margin-bottom: 8px;
+  color: #f8f8f8;
+  margin-bottom: 12px;
   text-align: center;
   width: 100%;
 }
 
 .album-wrapper {
-    width: 100%;
+  width: 100%;
   aspect-ratio: 1 / 1; /* 정사각형 유지 */
   overflow: hidden;
   border-radius: 8px;
@@ -110,7 +110,7 @@ defineProps({
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #333;
+  color: #f7f7f7;
 }
 
 .card-container:hover .title {
@@ -124,7 +124,7 @@ defineProps({
 
 .artist {
   font-size: 0.8rem;
-  color: #666;
+  color: #c7c7c7;
   margin: 2px 0 0 0;
   white-space: nowrap;
   overflow: hidden;
