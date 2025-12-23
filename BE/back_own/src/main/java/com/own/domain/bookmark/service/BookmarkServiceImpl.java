@@ -21,7 +21,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 			throw new CustomException(ErrorCode.ALREADY_BOOKMARKED);
 		}
 		//북마크 등록
-		bookmarkDao.insertBookmark(postId,userId);
+		bookmarkDao.insertBookmark(userId,postId);
 	}
 	
 	//게시물 북마크 취소
@@ -41,7 +41,7 @@ public class BookmarkServiceImpl implements BookmarkService {
 	
 	//특정 유저가 특정 게시물에 북마크했는지 체크
 	public boolean isBookmarked(int postId, int userId) {
-		Integer result = bookmarkDao.existsBookmark(postId,userId);
+		Integer result = bookmarkDao.existsBookmark(userId,postId);
 		return result != null && result > 0;
 	}
 

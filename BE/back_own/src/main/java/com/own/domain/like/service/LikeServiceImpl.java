@@ -19,7 +19,7 @@ public class LikeServiceImpl implements LikeService {
 				throw new CustomException(ErrorCode.ALREADY_LIKED);
 			}
 			//좋아요 등록
-			likeDao.insertLike(postId,userId);
+			likeDao.insertLike(userId,postId);
 		}
 		
 		//게시물 좋아요 취소
@@ -40,6 +40,6 @@ public class LikeServiceImpl implements LikeService {
 		
 		//특정 유저가 특정 게시물에 좋아요했는지 체크
 		public boolean isLiked(int postId, int userId) {
-			return likeDao.existsLike(postId,userId);
+			return likeDao.existsLike(userId,postId);
 		}
 }
