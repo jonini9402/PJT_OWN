@@ -7,8 +7,12 @@
 
     <!-- 게시물이 없을 때 -->
     <div v-else-if="posts.length === 0" class="empty-state">
-      <p>아직 작성한 운동일지가 없습니다</p>
-      <button @click="goToCreate">첫 운동일지 작성하기</button>
+      <div class="empty-icon">📝</div>
+      <h3 class="empty-title">아직 운동일지가 없어요</h3>
+      <p class="empty-description">오늘의 운동을 기록하고<br/>나만의 운동 플레이리스트를 만들어보세요</p>
+      <button class="create-btn" @click="goToCreate">
+        첫 운동일지 작성하기
+      </button>
     </div>
 
     <!-- 플레이리스트 형태 리스트 -->
@@ -155,31 +159,55 @@ export default {
   color: #999;
 }
 
-/* 빈 상태 */
 .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
   text-align: center;
-  padding: 60px 20px;
 }
 
-.empty-state p {
-  color: #999;
-  font-size: 16px;
+.empty-icon {
+  font-size: 40px;
   margin-bottom: 20px;
+  opacity: 0.6;
 }
 
-.empty-state button {
-  padding: 12px 24px;
-  background-color: #4169E1;
+.empty-title {
+  color: #e5e5e5;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.empty-description {
+  color: #999;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0 0 32px 0;
+}
+
+.create-btn {
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #2E3781 0%, #E1603F 100%); 
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(46, 55, 129, 0.3);
 }
 
-.empty-state button:hover {
-  background-color: #3158c9;
+.create-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(46, 55, 129, 0.4);
+}
+
+.create-btn:active {
+  transform: translateY(0);
 }
 
 /* 플레이리스트 */
