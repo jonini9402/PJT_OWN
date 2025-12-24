@@ -183,7 +183,7 @@ export default {
 .tier-tag {
   padding: 4px 14px;
   color: white;
-  border-radius: 4px;
+  border-radius: 25px;
   font-size: 10px;
   font-weight: bold;
 }

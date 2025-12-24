@@ -73,8 +73,12 @@ const handleSubmit = async () => {
         };
 
         await createPost(postPayload);
+
+        await authStore.refreshUserTier();
+
         alert("운동일지가 등록되었습니다!");
-        createStore.resetData();
+
+        createStore.resetData()
         router.push('/');
     } catch (error) {
         console.error("저장 실패:", error);

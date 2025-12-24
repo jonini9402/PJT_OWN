@@ -22,15 +22,13 @@
                     <template v-else-if="post.tierLevel === 2">Amateur</template>
                     <template v-else>Newbie</template>
                   </span>
-
+                
                 </div>
                 <span class="post-date">{{ formatDate(post.createdAt) }}</span>
-
 
               </div>
             </div>
           </div>
-
 
           <div class="post-content">
 
@@ -75,8 +73,6 @@
         </div>
         
       </div>
-
-
 
       <div class="post-right">
         <MusicCardFeed v-if="post.musicTitle" :music="{
@@ -406,7 +402,7 @@ const tierClass = computed(() => {
 .tag {
   font-size: 0.9rem;
   padding: 6px 16px;
-  border-radius: 25px;
+  border-radius: 8px;
 }
 
 .workout-tag {

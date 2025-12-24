@@ -52,7 +52,6 @@ defineProps({
   width: 100%;
   background: #2a2a2a;
   padding: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   gap: 10px;

@@ -4,10 +4,8 @@
     </header>
     
     <RankingSection></RankingSection>
-    <section class="recommend-section">
-      
-    </section>
 
+    <h3 class="List-title">최신 포스트</h3>
     <PostList />
   </div>
 </template>
@@ -20,7 +18,9 @@ import RankingSection from '@/components/feed/RankingSection.vue';
 <style scoped>
 .feed-page { max-width: 620px; margin: 0 auto; }
 .feed-header { margin-bottom: 24px; }
-.recommend-section { margin-bottom: 30px; }
-.recommend-container { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 10px; }
+.List-title {
+  padding: 10px 20px;
+  margin-bottom: 4px;
+}
 
 </style>

@@ -64,7 +64,7 @@ const tierClass = computed(() => authStore.tierClass);
 .tier-badge {
   display: inline-block;
   padding: 6px 20px;
-  border-radius: 6px;
+  border-radius: 25px;
   color: #e5e5e5;
   font-size: 13px;
   font-weight: bold;
