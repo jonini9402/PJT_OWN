@@ -142,7 +142,6 @@ export default {
   width: 5px;
   height: 100%;
   
-  /* [해결] 색상 배치를 A-B-C-A 순서로 배치합니다. */
   /* 마지막에 첫 번째 색상이 다시 와야 자연스럽게 이어집니다. */
   background: linear-gradient(
     to bottom, 
@@ -196,8 +195,23 @@ export default {
   transform: scale(1.2);
 }
 
+.menu-item:hover, .logout-btn:hover,
+.menu-item.router-link-active {
+  color: #ffffff; /* 글자색을 하얗게 */
+}
+
+.menu-item:hover .menu-label, 
+.logout-btn:hover .menu-label,
+.menu-item.router-link-active .menu-label {
+  font-weight: 700; /* 글씨 진하게 */
+  transform: scale(1.05); /* 글씨 크기 1.05배 확대 */
+}
+
 .menu-label {
   font-size: 15px;
+  transition: all 0.3s ease; /* 호버 시 변화를 부드럽게 연결 */
+  display: inline-block; /* transform: scale 적용을 위해 필요 */
+  transform-origin: left; /* 왼쪽 기준으로 커지게 설정 */
 }
 
 .logout-btn {

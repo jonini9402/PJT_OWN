@@ -1,123 +1,186 @@
 <template>
     <div class="step-container">
-        <h2>오늘의 운동을 마음껏 표현해 주세요</h2>
+        <h2 class="step-title">오늘의 운동을 마음껏 표현해 주세요</h2>
+
+        <div class="divider"></div>
 
         <div class="caption-area">
             <textarea
               v-model="createStore.caption"
               :placeholder="placeholderText"
               maxlength="400"
+              class="glass-textarea"
             ></textarea>
+            <div class="char-count">{{ createStore.caption.length }} / 400</div>
         </div>
 
-        <div class="nav-btn">
-            <button @click="handleSubmit"
-            :disabled="!createStore.caption.trim()"
-            class="submit-btn"> 완료 </button>
+        <div class="divider"></div>
+
+        <div class="nav-area">
+            <button @click="prev" class="prev-btn">이전</button>
+            <button 
+                @click="handleSubmit"
+                :disabled="!createStore.caption.trim()"
+                class="submit-btn"
+            >
+                완료
+            </button>
         </div>
     </div>
 </template>
 
 <script setup>
-    import { computed } from 'vue';
-    import { useCreateStore } from '@/stores/create';
-    import { createPost } from '@/api/post';
-    import { saveMusicToDb } from '@/api/music';
-    import { useRouter } from 'vue-router';
-    import { useAuthStore } from '@/stores/auth';
+import { computed } from 'vue';
+import { useCreateStore } from '@/stores/create';
+import { createPost } from '@/api/post';
+import { saveMusicToDb } from '@/api/music';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
 
-    const createStore = useCreateStore();
-    const authStore = useAuthStore();
-    const router = useRouter();
+const createStore = useCreateStore();
+const authStore = useAuthStore();
+const router = useRouter();
 
-    const placeholderText = computed(() => {
+const placeholderText = computed(() => {
     const title = createStore.selectedMusic?.musicTitle || '음악';
     return `"${title}"의 리듬에 맞춰 움직인 오늘, 어떤 기분이 드셨나요?`;
-    });
+});
 
+const prev = () => {
+    createStore.setStep(3);
+};
 
-    const handleSubmit = async () => {
-
-        try {
-        // 1단계: 음악 정보를 DB에 먼저 저장
+const handleSubmit = async () => {
+    try {
         const musicPayload = {
-            musicId: null, // 새로 저장하는 경우 null
             spotifyTrackId: createStore.selectedMusic.spotifyTrackId,
             musicTitle: createStore.selectedMusic.musicTitle,
             artist: createStore.selectedMusic.artist,
             albumImg: createStore.selectedMusic.albumImg,
-            duration: parseInt(createStore.selectedMusic.duration) || 0, // int로 변환
+            duration: parseInt(createStore.selectedMusic.duration) || 0,
             previewUrl: createStore.selectedMusic.previewUrl || null,
-            spotifyTrackUrl: createStore.selectedMusic.spotifyTrackUrl
         };
 
-        console.log("1. 음악 저장 요청:", musicPayload);
         const musicResponse = await saveMusicToDb(musicPayload);
         const savedMusicId = musicResponse.data.musicId;
-        console.log("1. 음악 저장 응답:", musicResponse.data);
-        
-        // musicId 확인
-        if (!musicResponse.data || !musicResponse.data.musicId) {
-            throw new Error("음악 저장 실패: musicId를 받지 못했습니다.");
-        }
 
-        // 2단계: 포스트 생성 (musicId는 서버에서 받은 값 사용)
         const postPayload = {
             userId: authStore.userId,
-            workoutTag: createStore.workoutTag?.workoutTypeId, // Integer로 전송
+            workoutTag: createStore.workoutTag?.workoutTypeId,
             emotionTags: createStore.selectedEmotionTags.map(tag => tag.emotionTypeId),
             musicId: savedMusicId,
             caption: createStore.caption.trim(),
-            spotifyTrackUrl: `https://open.spotify.com/track/$${createStore.selectedMusic.spotifyTrackId}`
         };
 
-        console.log("2. 포스트 생성 요청:", postPayload);
-        const postResponse = await createPost(postPayload);
-        console.log("2. 포스트 생성 응답:", postResponse.data);
-        
+        await createPost(postPayload);
         alert("운동일지가 등록되었습니다!");
         createStore.resetData();
-        
-        await authStore.refreshUserTier();
-
-        // 메인 페이지로 이동
         router.push('/');
-        
     } catch (error) {
         console.error("저장 실패:", error);
-        
-        if (error.response) {
-            console.error("응답 데이터:", error.response.data);
-            console.error("응답 상태:", error.response.status);
-            console.error("응답 헤더:", error.response.headers);
-            
-            const errorMsg = error.response.data.message || '서버 오류가 발생했습니다.';
-            alert(`오류: ${errorMsg}`);
-        } else if (error.request) {
-            console.error("요청 실패:", error.request);
-            alert("서버에 연결할 수 없습니다.");
-        } else {
-            console.error("에러:", error.message);
-            alert("요청 중 오류가 발생했습니다.");
-        }
     }
-    }
+};
 </script>
 
 <style scoped>
-    .caption-area { position: relative; margin-bottom: 30px; }
-textarea { 
-  width: 100%; height: 180px; padding: 15px; 
-  border: 1px solid #ddd; border-radius: 12px; 
-  resize: none; font-size: 1rem; line-height: 1.5;
+.step-container {
+    width: 100%; /* 부모 너비(800px)를 꽉 채우도록 설정 */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box; /* 패딩이 너비를 늘리지 않게 방지 */
 }
-.char-count { position: absolute; bottom: 10px; right: 15px; color: #aaa; font-size: 0.8rem; }
 
-.submit-btn { 
-  flex: 2; background: #42b883; color: white; 
-  padding: 15px; border-radius: 8px; border: none; font-weight: bold; font-size: 1rem;
+.step-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 40px;
 }
-.submit-btn:disabled { background: #ccc; }
-.prev-btn { flex: 1; background: #eee; padding: 15px; border-radius: 8px; border: none; }
 
+.divider {
+    width: 90%;
+    height: 2px;
+    background: linear-gradient(
+        90deg, 
+        rgba(255, 255, 255, 0) 0%, 
+        rgba(255, 255, 255, 0.6) 50%, 
+        rgba(255, 255, 255, 0) 100%
+    );
+    margin: 20px 0;
+}
+
+.caption-area {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0 40px;
+    box-sizing: border-box; /* 중요: 좌우 40px 패딩을 너비 계산에 포함 */
+}
+
+.glass-textarea {
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #333;
+    resize: none;
+    outline: none;
+    transition: all 0.3s;
+    box-sizing: border-box;
+}
+
+.glass-textarea:focus {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.char-count {
+    position: absolute;
+    bottom: 20px;
+    right: 60px;
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.nav-area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 20px;
+}
+
+.prev-btn, .submit-btn {
+    width: 140px;
+    padding: 15px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.prev-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.submit-btn {
+    background: #333;
+    color: white;
+    border: none;
+}
+
+.submit-btn:disabled {
+    background: rgba(0, 0, 0, 0.2);
+    cursor: not-allowed;
+}
 </style>

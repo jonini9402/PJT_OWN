@@ -314,7 +314,8 @@ const tierClass = computed(() => {
   height: 100%;
   justify-content: space-between;
   /* 양 끝으로 배치 */
-  align-items: flex-start;
+  align-items: stretch;
+  gap: 30px;
 }
 
 .post-left {
@@ -335,9 +336,11 @@ const tierClass = computed(() => {
 }
 
 .post-right {
-  flex: 0 0 210px;
-  /* 우측 영역 폭 210px 절대 고정 */
-  /* 좌측과의 최소 간격 */
+  flex: 0 0 210px; /* 너비 210px 절대 고정 */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* 내부의 MusicCardFeed를 오른쪽 정렬 */
+  justify-content: flex-start; /* 상단부터 배치 */
 }
 
 /* 프로필 영역 */
@@ -421,12 +424,18 @@ const tierClass = computed(() => {
   color: #eee;
   line-height: 1.6;
   margin: 0;
-  width: 90%;
+  
+  width: 100%;
+  max-width: 100%;
+  margin-right: auto;
 
-  display: block; /* -webkit-box 대신 block 권장 (애니메이션 효과를 위해) */
-  max-height: 1000px; /* 충분히 큰 값 */
+  /* --- 여유 공간 확보를 위한 핵심 코드 --- */
+  min-height: 3.2em; /* 최소 2줄 정도의 높이를 항상 유지 (line-height 1.6 * 2) */
+  margin-bottom: 12px; /* 캡션 바로 아래에 고정 여백 추가 */
+  /* -------------------------------------- */
+
+  display: block;
   overflow: hidden;
-  max-height: 500px;
   transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
   opacity: 1;
 }
