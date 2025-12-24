@@ -74,58 +74,65 @@ watch(() => route.path, (newPath) => {
 
 <style scoped>
 .sidebar-right {
-    width: 220px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    
+  width: 220px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  
+  /* 공간이 부족해도 절대 찌그러지지 않게 고정 */
+  flex-shrink: 0; 
+}
+
+/* 화면 너비가 1100px 이하가 되면 사이드바 숨기기 */
+@media (max-width: 1100px) {
+  .sidebar-right {
+    display: none;
+  }
 }
 
 .empty-section {
-    margin-top: 20px;
-    margin-bottom: 80px;
+  margin-top: 20px;
+  margin-bottom: 80px;
 }
 
 .circular-chart {
-    display: block;
-    margin: 10px auto;
-    max-width: 150px;
+  display: block;
+  margin: 10px auto;
+  max-width: 150px;
 }
 
 .circle-bg {
-    fill: none;
-    stroke: #333; /* 배경 원은 어둡게 유지 */
-    stroke-width: 2.8px;
+  fill: none;
+  stroke: #333; 
+  stroke-width: 2.8px;
 }
 
 .circle {
-    fill: none;
-    /* stroke: #1DB954; <- 이 줄을 삭제하거나 주석 처리하세요. HTML에서 url로 제어합니다. */
-    stroke-width: 3.2px; /* 배경보다 살짝 두껍게 하면 더 강조됩니다. */
-    stroke-linecap: round;
-    transition: stroke-dasharray 0.8s ease-in-out; /* 수치 변경 시 부드럽게 차오르는 효과 */
+  fill: none;
+  stroke-width: 3.2px; 
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.8s ease-in-out; 
 }
 
 .percentage {
-    fill: #fff;
-    font-size: 0.6em; /* 숫자가 조금 더 잘 보이도록 키움 */
-    text-anchor: middle;
-    font-weight: bold;
-    font-family: 'Arial', sans-serif;
+  fill: #fff;
+  font-size: 0.6em; 
+  text-anchor: middle;
+  font-weight: bold;
+  font-family: 'Arial', sans-serif;
 }
 
 .stats-label {
-    margin-top: 22px;
-    text-align: center;
-    font-size: 14px;
-    color: #ddd;
+  margin-top: 22px;
+  text-align: center;
+  font-size: 14px;
+  color: #ddd;
 }
 
 .write-log-btn {
   width: 100%;
   padding: 15px;
- 
   background: linear-gradient(135deg, #2E3781 0%, #E1603F 100%);
   border: none;
   border-radius: 12px;
@@ -137,7 +144,6 @@ watch(() => route.path, (newPath) => {
   justify-content: center;
   gap: 10px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
 }
 
 .write-log-btn:hover {
@@ -150,5 +156,4 @@ watch(() => route.path, (newPath) => {
   transform: scale(0.96);
   box-shadow: 0 2px 10px rgba(29, 185, 84, 0.3);
 }
-
 </style>
