@@ -9,6 +9,10 @@
     <div class="tier-badge" :class="tierClass">
       {{ tierLabel }}
     </div>
+
+    <button class="edit-text-btn" @click="goToEditPage">
+      프로필 편집
+    </button>
   </div>
   
   <div class="mini-profile" v-else>
@@ -19,14 +23,19 @@
 <script setup>
 import { computed } from 'vue';
 import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
 
 const authStore = useAuthStore();
+const router = useRouter();
 
-// computed로 getter 값들을 받아오기
 const nickname = computed(() => authStore.nickname);
 const profileImg = computed(() => authStore.profileImg || '/default-profile.png');
 const tierLabel = computed(() => authStore.tierLabel);
 const tierClass = computed(() => authStore.tierClass);
+
+const goToEditPage = () => {
+  router.push('/mypage/edit');
+};
 </script>
 
 <style scoped>
@@ -68,6 +77,7 @@ const tierClass = computed(() => authStore.tierClass);
   color: #e5e5e5;
   font-size: 13px;
   font-weight: bold;
+  margin-bottom: 15px;
 }
 
 .tier-pro {
@@ -80,5 +90,24 @@ const tierClass = computed(() => authStore.tierClass);
 
 .tier-newbie {
   background-color: #b9a798;
+}
+
+.edit-text-btn {
+  width: 100%;
+  padding: 8px;
+  background-color: transparent;
+  border: 1px solid #444;
+  border-radius: 6px;
+  color: #999;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-text-btn:hover {
+  background-color: #333;
+  border-color: #555;
+  color: #ccc;
 }
 </style>

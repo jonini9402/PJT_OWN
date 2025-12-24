@@ -4,8 +4,7 @@
       <div class="profile-image">
         <img :src="userInfo.profileImg || '/default-profile.png'" alt="프로필" />
       </div>
-      
-      </div>
+    </div>
 
     <div class="profile-right">
       <div class="profile-top">
@@ -14,9 +13,7 @@
           <span class="tier-tag" :class="tierClass">{{ tierLabel }}</span>
         </div>
         
-        <button class="edit-profile-btn" @click="goToEditPage">
-          회원정보 수정
-        </button>
+        <!-- 회원정보 수정 버튼 삭제됨 -->
       </div>
 
       <p class="post-count">{{ userInfo.postCount }} posts</p>
@@ -105,11 +102,6 @@ export default {
     changeTab(tabId) {
       this.currentTab = tabId;
       this.$emit('tab-changed', tabId);
-    },
-
-    // 회원정보 수정 페이지로 이동
-    goToEditPage() {
-      this.$router.push('/mypage/edit');
     }
   },
 
@@ -158,15 +150,12 @@ export default {
   flex: 1;
 }
 
-/* 양끝 정렬을 위해 수정 */
 .profile-top {
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 닉네임은 왼쪽, 버튼은 오른쪽 */
   margin-bottom: 10px;
 }
 
-/* 닉네임과 태그를 묶어주는 그룹 */
 .name-group {
   display: flex;
   align-items: center;
@@ -186,24 +175,6 @@ export default {
   border-radius: 25px;
   font-size: 10px;
   font-weight: bold;
-}
-
-/* 회원수정 버튼 스타일 */
-.edit-profile-btn {
-  background-color: #333;
-  color: #ccc;
-  border: 1px solid #444;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 10px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.edit-profile-btn:hover {
-  background-color: #444;
-  color: white;
-  border-color: #666;
 }
 
 .post-count {
