@@ -105,7 +105,7 @@ const extractColor = () => {
 }
 
 
-// 'YYYY년 MM월 DD일 형식으로 변환'
+// YYYY년 MM월 DD일 형식으로 변환
 const formatPostDate = (date) => {
     const postDate = new Date(date);
     return `${postDate.getFullYear()}년 ${postDate.getMonth() + 1}월 ${postDate.getDate()}일`;
@@ -117,22 +117,28 @@ const deletePost = async () => {
   }
 
   try {
-    // URL은 실제 백엔드 주소에 맞게 확인 필요 (post_id를 보냄)
     const response = await fetch(`http://localhost:8080/api/post/${props.post.postId}`, {
       method: 'DELETE',
-      credentials: 'include', // 세션/쿠키 인증 시 필수
+      credentials: 'include',
     });
 
+    // 1. 삭제 성공 200 OK
     if (response.ok) {
       alert("게시글이 삭제되었습니다.");
-      emit('close');         // 모달 닫기
-      emit('post-deleted');  // 목록 새로고침을 위해 부모에게 알림
-    } else {
+      window.location.reload(); // 성공하면 페이지를 새로고침해서 목록 갱신
+    } 
+    // 2. 이미 삭제된 글 Not Found
+    else if (response.status === 404) {
+      alert("이미 삭제된 게시글입니다. 목록을 갱신합니다.");
+      window.location.reload(); //유령 글이므로 새로고침해서 없애버림
+    }
+    // 3. 그외 다른 에러
+    else {
       throw new Error('삭제 실패');
     }
   } catch (error) {
     console.error("삭제 에러:", error);
-    alert("삭제 중 오류가 발생했습니다.");
+    alert("삭제 중 오류가 발생했습니다."); 
   }
 };
 
