@@ -3,6 +3,9 @@
     <div class="card-top">
       <img :src="music.albumImg" alt="Album Art" class="album-img"
         crossorigin="anonymous" @load="extractColor" @error="handleImageError" />
+      <a href="https://www.spotify.com" target="_blank" class="spotify-link">
+        <img src="@/assets/spotifyLogo/spotify_logo_white.png" alt="SpotifyLogo" class="spotify-logo"/>
+      </a>
     </div>
     
     <div class="card-bottom">
@@ -54,9 +57,9 @@ const handleImageError = (e) => {
 
 <style scoped>
 .music-card-feed {
-  width: 210px;
-  height: 210px;
-  padding: 20px; /* 내부 여백 20px */
+  width: 180px;
+  height: 180px;
+  padding: 14px; /* 내부 여백 20px */
   background: #1e1e1e;
   border-radius: 16px;
   display: flex;
@@ -67,7 +70,9 @@ const handleImageError = (e) => {
 
 .card-top {
   display: flex;
-  justify-content: flex-start; /* 앨범이미지 좌측 상단 */
+  justify-content: space-between; /* 앨범이미지 좌측 상단 */
+  align-items: flex-start;
+  width: 100%;
 }
 
 .album-img {
@@ -75,6 +80,31 @@ const handleImageError = (e) => {
   height: 80px;
   border-radius: 8px;
   object-fit: cover;
+}
+
+.spotify-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  z-index: 5;
+}
+
+.spotify-logo{
+  width: 30px;
+  height: 30px;
+  opacity: 0.9;
+
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+}
+
+.spotify-logo:hover {
+  transform: scale(1.3);
+  opacity: 1;
+}
+
+.spotify-logo:active{
+  transform: scale(1.1);
 }
 
 .card-bottom {
@@ -92,7 +122,7 @@ const handleImageError = (e) => {
 .title {
   color: white;
   margin: 0;
-  font-size: 18pt; /* 제목 18pt */
+  font-size: 14pt; /* 제목 18pt */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -101,6 +131,6 @@ const handleImageError = (e) => {
 .artist {
   color: #aaa;
   margin: 2px 0 0 0;
-  font-size: 12pt; /* 가수 12pt */
+  font-size: 10pt; /* 가수 12pt */
 }
 </style>

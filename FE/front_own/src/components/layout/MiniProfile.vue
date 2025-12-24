@@ -65,20 +65,20 @@ const tierClass = computed(() => authStore.tierClass);
   display: inline-block;
   padding: 6px 20px;
   border-radius: 6px;
-  color: white;
+  color: #e5e5e5;
   font-size: 13px;
   font-weight: bold;
 }
 
 .tier-pro {
-  background-color: #4169E1;
+  background-color: #2E3781;
 }
 
 .tier-amateur {
-  background-color: #FF6B6B;
+  background-color: #E1603F;
 }
 
 .tier-newbie {
-  background-color: #51CF66;
+  background-color: #b9a798;
 }
 </style>

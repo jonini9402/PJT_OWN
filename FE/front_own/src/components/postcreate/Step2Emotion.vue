@@ -1,6 +1,9 @@
 <template>
     <div class="step-container">
-        <h2>운동하면서 어떤 감정이 들었나요?</h2>
+        <h2 class="step-title">운동하면서 어떤 감정이 들었나요?</h2>
+
+        <div class="divider"></div>
+
         <div v-if="createStore.allEmotionTags.length === 0" class="loading">
             감정 태그 불러오는 중...
         </div>
@@ -21,23 +24,28 @@
             </div>
         </div>
 
+        <div class="divider"></div>
+
         <div class="selected-summary">
             <div v-if="createStore.selectedEmotionTags.length === 0" class="placeholder">
                 태그를 선택해주세요.
             </div>
             <div v-else class="selected-tags">
                 <span v-for="emotion in createStore.selectedEmotionTags" :key="emotion.emotionTypeId" class="badge">
-                    #{{ emotion.emotionName }}
+                    {{ emotion.emotionName }}
                 </span>
             </div>
         </div>
 
-        <div class="nav-btn">
+        <div class="nav-area">
+            <button @click="prev" class="prev-btn">이전</button>
             <button
                 @click="next"
                 :disabled="createStore.selectedEmotionTags.length === 0"
                 class="next-btn"
-                > 다음 </button>
+            >
+                다음
+            </button>
         </div>
     </div>
 </template>
@@ -72,6 +80,10 @@ const handleEmotion = (tag) => {
     createStore.toggleEmotion(tag);
 };
 
+const prev = () => {
+    createStore.setStep(1); // 1단계로 돌아가기
+};
+
 const next = () => {
     if (createStore.selectedEmotionTags.length > 0) {
         console.log("Step2 완료 - 선택된 태그:", createStore.selectedEmotionTags);
@@ -83,15 +95,28 @@ const next = () => {
 
 <style scoped>
 .step-container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #333;
+.step-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+}
+
+.divider {
+    width: 90%;
+    height: 2px;
+    background: linear-gradient(
+        90deg, 
+        rgba(255, 255, 255, 0) 0%, 
+        rgba(255, 255, 255, 0.6) 50%, 
+        rgba(255, 255, 255, 0) 100%
+    );
+    margin: 15px 0;
 }
 
 .loading {
@@ -102,104 +127,151 @@ h2 {
 }
 
 .scroll-area {
-    height: 400px;
+    flex: 1;
+    width: 100%;
     overflow-y: auto;
-    padding-right: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
+    padding: 0 20px;
+    margin: 10px 0;
+}
+
+/* 크롬, 사파리용 스크롤바 */
+.scroll-area::-webkit-scrollbar {
+    width: 6px; /* 스크롤바 너비 */
+}
+
+.scroll-area::-webkit-scrollbar-track {
+    background: transparent; /* 트랙 배경 투명 */
+}
+
+.scroll-area::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3); /* 작은 바: 반투명 화이트 */
+    border-radius: 10px;
+}
+
+.scroll-area::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5); /* 호버 시 약간 더 선명하게 */
 }
 
 .emotion-group {
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+    width: 100%;
 }
 
-.group-title { 
-    font-size: 1.1rem; 
-    margin: 20px 0 10px; 
+.group-title {
+    font-size: 1.1rem;
     color: #333;
+    margin-bottom: 15px;
     font-weight: 600;
+    padding-left: 5px;
 }
 
 .tag-wrap {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
 }
 
 .tag-btn {
-    padding: 8px 14px;
-    border: 1px solid #ddd;
+    padding: 10px 18px;
+    border: 1.5px solid rgba(0, 0, 0, 0);
     border-radius: 20px;
-    background: white;
+    background: rgba(255, 255, 255, 0.15);
+    color: #333;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tag-btn:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.tag-btn.active {
+    background: #333;
+    color: #fff;
+    border-color: #333;
+}
+
+.selected-summary {
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.badge {
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.placeholder {
+    color: rgba(0, 0, 0, 0.4);
     font-size: 0.9rem;
+}
+
+.nav-area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* 버튼 사이 간격 */
+    padding-top: 10px;
+}
+
+.prev-btn, .next-btn {
+    width: 140px;
+    padding: 15px;
+    border-radius: 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.tag-btn:hover {
-    border-color: #42b883;
-    transform: translateY(-1px);
+.prev-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: #333;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-.tag-btn.active {
-    background: #42b883;
-    color: white;
-    border-color: #42b883;
+.prev-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
 }
 
-.selected-summary {
-    min-height: 60px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-}
-
-.placeholder {
-    color: #999;
-    text-align: center;
-    padding: 10px;
-}
-
-.selected-tags { 
-    display: flex; 
-    flex-wrap: wrap; 
-    gap: 8px; 
-}
-
-.badge {
+.next-btn {
     background: #333;
     color: white;
-    padding: 6px 12px;
-    border-radius: 15px;
-    font-size: 0.85rem;
-}
-
-.nav-btn { 
-    display: flex; 
-    gap: 10px; 
-    margin-top: 20px; 
-}
-
-.next-btn { 
-    flex: 1; 
-    padding: 15px; 
-    border-radius: 8px; 
-    cursor: pointer; 
     border: none;
-    background: #333;
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    transition: background 0.3s;
 }
 
-.next-btn:hover:not(:disabled) {
-    background: #42b883;
+.next-btn:disabled {
+    background: rgba(0, 0, 0, 0.2);
+    cursor: not-allowed;
 }
 
-.next-btn:disabled { 
-    background: #ccc; 
-    cursor: not-allowed; 
+.next-btn:active:not(:disabled), .prev-btn:active {
+    transform: scale(0.95);
+}
+
+.loading {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
 }
 </style>

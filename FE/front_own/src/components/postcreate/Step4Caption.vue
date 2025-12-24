@@ -47,7 +47,8 @@
             artist: createStore.selectedMusic.artist,
             albumImg: createStore.selectedMusic.albumImg,
             duration: parseInt(createStore.selectedMusic.duration) || 0, // int로 변환
-            previewUrl: createStore.selectedMusic.previewUrl || null
+            previewUrl: createStore.selectedMusic.previewUrl || null,
+            spotifyTrackUrl: createStore.selectedMusic.spotifyTrackUrl
         };
 
         console.log("1. 음악 저장 요청:", musicPayload);

@@ -1,83 +1,95 @@
 <template>
-   <div class="post-item" v-if="post">
+  <div class="post-item" v-if="post">
 
     <div class="post-main-container">
 
       <div class="post-left">
-        <div class="post-header">
-          <div class="user-info">
-            <img 
-              :src="post.profileImg || '/default-profile.png'" 
-              class="user-avatar" 
-              alt="프로필"
-            />
-            <div class="user-meta">
+        <div>
+          <div class="post-header">
+            <div class="user-info">
+              <img :src="post.profileImg || '/default-profile.png'" class="user-avatar" alt="프로필" />
+              <div class="user-meta">
 
-              <div class="user-name-row">
-                <span class="user-nickname">{{ post.nickname || '익명' }}</span>
+                <div class="user-name-row">
+                  <span class="user-nickname">{{ post.nickname || '익명' }}</span>
 
-                <span
-                  v-if="post.tierLevel"
-                    class="tier-badge"
-                    :class="{
-                      'tier-pro': post.tierLevel === 3,
-                      'tier-amateur': post.tierLevel === 2,
-                      'tier-newbie': post.tierLevel === 1
-                        }" >
-                  <template v-if="post.tierLevel === 3">Pro</template>
-                  <template v-else-if="post.tierLevel === 2">Amateur</template>
-                  <template v-else>Newbie</template>
+                  <span v-if="post.tierLevel" class="tier-badge" :class="{
+                    'tier-pro': post.tierLevel === 3,
+                    'tier-amateur': post.tierLevel === 2,
+                    'tier-newbie': post.tierLevel === 1
+                  }">
+                    <template v-if="post.tierLevel === 3">Pro</template>
+                    <template v-else-if="post.tierLevel === 2">Amateur</template>
+                    <template v-else>Newbie</template>
+                  </span>
+
+                </div>
+                <span class="post-date">{{ formatDate(post.createdAt) }}</span>
+
+
+              </div>
+            </div>
+          </div>
+
+
+          <div class="post-content">
+
+            <p class="caption" :class="{ collapsed: !isExpanded }">{{ post.caption || '' }}</p>
+            <span v-if="showMoreButton" class="more-text" @click="toggleExpand">{{ isExpanded ? '접기' : '더보기' }}</span>
+          </div>
+        </div>
+
+        <div class="post-bottom">
+          <div class="tags">
+            <div class="workout-tags">
+              <span class="tag workout-tag" v-if="workoutName">{{ workoutName }}</span>
+            </div>
+
+            <div class="emotion-tags-container" :class="{ expanded: isExpanded }">
+              <div class="emotion-tags">
+                <span v-for="tag in visibleEmotionTags" :key="tag" class="tag emotion-tag">
+                  {{ tag }}
                 </span>
                 
+                <div v-if="!isExpanded && hiddenTagsCount > 0" class="tag-more-count" @click="toggleExpand">
+                  +{{ hiddenTagsCount }}
+                </div>
               </div>
-              <span class="post-date">{{ formatDate(post.createdAt) }}</span>
+            </div>
 
+            <div class="post-actions">
+              <button class="action-btn" @click="toggleLike">
+                <img
+                  :src="isLiked ? heartFill : heart" alt="좋아요" class="action-icon" />
+                <span>{{ likeCount }}</span>
+              </button>
+
+              <button class="action-btn" @click="toggleBookmark">
+                <img
+                  :src="isBookmarked ? bookmarkFill : bookmark" alt="북마크" class="action-icon" />
+                <span>{{ bookmarkCount }}</span>
+              </button>
 
             </div>
           </div>
         </div>
-
-       <div class="post-content">
-         <p class="caption">{{ post.caption || '' }}</p>
-         <div class="tags">
-           <span class="tag workout-tag" v-if="workoutName">{{ workoutName }}</span>
-           <span 
-             v-for="tag in (post.emotionTags || [])" 
-             :key="tag" 
-             class="tag emotion-tag"
-            >
-            {{ tag }}
-            </span>
-         </div>
-       </div>
-
-        <div class="post-actions">
-          <button class="action-btn" @click="toggleLike">
-            {{ isLiked ? '❤️' : '🤍' }} {{ likeCount }}
-          </button>
-          <button class="action-btn" @click="toggleBookmark">
-            {{ isBookmarked ? '🔖' : '📑' }} {{ bookmarkCount }}
-          </button>
-        </div>  
+        
       </div>
 
+
+
       <div class="post-right">
-        <MusicCardFeed 
-          v-if="post.musicTitle"
-          :music="{
-            musicTitle: post.musicTitle,
-            artist: post.artist,
-            albumImg: post.albumImg,
-            previewUrl: post.previewUrl
-          }" 
-        />
+        <MusicCardFeed v-if="post.musicTitle" :music="{
+          musicTitle: post.musicTitle,
+          artist: post.artist,
+          albumImg: post.albumImg,
+          previewUrl: post.previewUrl,
+          spotifyTrackUrl: post.spotifyTrackUrl
+        }" />
       </div>
 
     </div>
 
-
-
-    
   </div>
 </template>
 
@@ -90,6 +102,11 @@ import { useAuthStore } from '@/stores/auth';
 import { addLike, removeLike, checkLiked } from '@/api/like';
 import { addBookmark, removeBookmark, checkBookmarked } from '@/api/bookmark';
 
+import heart from '@/assets/icons/heart.svg';
+import heartFill from '@/assets/icons/heart_fill.svg';
+import bookmark from '@/assets/icons/bookmark.svg';
+import bookmarkFill from '@/assets/icons/bookmark_fill.svg';
+
 const props = defineProps({
   post: {
     type: Object,
@@ -100,6 +117,29 @@ const props = defineProps({
 
 const createStore = useCreateStore();
 const authStore = useAuthStore();
+
+const isExpanded = ref(false);
+
+const toggleExpand = () => {
+  isExpanded.value = !isExpanded.value;
+}
+
+const showMoreButton = computed(() => {
+  const hasLongCaption = props.post?.caption && props.post.caption.length > 60;
+  const hasManyTags = (props.post?.emotionTags?.length || 0) > 2;
+  return hasLongCaption || hasManyTags;
+});
+
+const hiddenTagsCount = computed(() => {
+  const total = props.post?.emotionTags?.length || 0;
+  return total > 2 ? total - 2 : 0;
+});
+
+const visibleEmotionTags = computed(() => {
+  const tags = props.post?.emotionTags || [];
+  if (isExpanded.value) return tags;
+  return tags.slice(0, 2);
+})
 
 const formatDate = (dateArray) => {
   if (!dateArray) return '방금 전';
@@ -134,11 +174,11 @@ const workoutName = computed(() => {
   if (!createStore.workoutTags || !props.post?.workoutTag) {
     return "운동";
   }
-  
+
   const found = createStore.workoutTags.find(
     t => t.workoutTypeId === props.post.workoutTag
   );
-  
+
   return found?.workoutName || "운동";
 });
 
@@ -211,7 +251,7 @@ const toggleBookmark = async () => {
 };
 
 onMounted(async () => {
-// createStore 데이터 로드 (아직 안 되어 있다면)
+  // createStore 데이터 로드 (아직 안 되어 있다면)
   if (!createStore.workoutTags || createStore.workoutTags.length === 0) {
     await createStore.loadWorkoutTags();
   }
@@ -250,58 +290,211 @@ const tierClass = computed(() => {
 
 <style scoped>
 .post-item {
-  width: 100%;       /* 부모인 main-content(820px)에 맞게 100%로 설정 */
-  max-width: 800px;  /* 최대 800px 유지 */
-  height: 350px;
+  width: 100%;
+  /* 부모인 main-content(820px)에 맞게 100%로 설정 */
+  max-width: 800px;
+  /* 최대 800px 유지 */
+  height: auto;
+
   background: #2a2a2a;
   border-radius: 20px;
   padding: 30px;
-  margin: 0 auto 24px auto; /* 중앙 정렬 및 아래 간격 */
-  box-sizing: border-box;    /* 패딩이 폭에 포함되도록 설정 (매우 중요) */
+  margin: 0 auto 24px auto;
+  /* 중앙 정렬 및 아래 간격 */
+  box-sizing: border-box;
+  /* 패딩이 폭에 포함되도록 설정 (매우 중요) */
+}
+
+.post-content {
+  margin-top: 24px;
 }
 
 .post-main-container {
   display: flex;
   height: 100%;
-  justify-content: space-between; /* 양 끝으로 배치 */
+  justify-content: space-between;
+  /* 양 끝으로 배치 */
   align-items: flex-start;
 }
 
 .post-left {
-  flex: 1;           /* 남는 공간을 다 쓰되 */
-  min-width: 0;      /* 내부 텍스트가 길어져도 우측을 밀지 않음 */
+  flex: 1;
+  /* 남는 공간을 다 쓰되 */
+  min-width: 0;
+  /* 내부 텍스트가 길어져도 우측을 밀지 않음 */
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
+.post-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .post-right {
-  flex: 0 0 210px;   /* 우측 영역 폭 210px 절대 고정 */
+  flex: 0 0 210px;
+  /* 우측 영역 폭 210px 절대 고정 */
   /* 좌측과의 최소 간격 */
 }
 
 /* 프로필 영역 */
-.user-info { display: flex; align-items: center; gap: 16px; }
-.user-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
-.user-meta { display: flex; flex-direction: column; gap: 2px; }
-.user-nickname { font-size: 14pt; font-weight: bold; color: white; line-height: 1.2;}
-.post-date { font-size: 10pt; color: #aaa; }
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-nickname {
+  font-size: 14pt;
+  font-weight: bold;
+  color: white;
+  line-height: 1.2;
+}
+
+.post-date {
+  font-size: 10pt;
+  color: #aaa;
+}
 
 /* 태그 영역 */
-.tags { margin: 15px 0; display: flex; gap: 8px; flex-wrap: wrap; }
-.tag { font-size: 0.9rem; padding: 6px 16px; border-radius: 25px; }
-.workout-tag { background: #4169E1; color: white; }
-.emotion-tag { background: #444; color: #ddd; }
-
-/*캡션 영역 */
-.caption { 
-  height: 100px; 
-  font-size: 12pt; 
-  color: #eee; 
-  margin: 10px 0;
-  overflow-y: auto;
-  line-height: 1.4;
+.tags {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.3s ease;
 }
+
+.workout-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.emotion-tags {
+  position: relative;
+
+  width: calc(100% + 210px);
+
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  overflow-x: auto;
+
+  padding-bottom: 24px;
+}
+
+.tag {
+  font-size: 0.9rem;
+  padding: 6px 16px;
+  border-radius: 25px;
+}
+
+.workout-tag {
+  background: #4169E1;
+  color: white;
+}
+
+.emotion-tag {
+  background: #444;
+  color: #ddd;
+}
+
+.caption {
+  font-size: 10pt;
+  color: #eee;
+  line-height: 1.6;
+  margin: 0;
+  width: 90%;
+
+  display: block; /* -webkit-box 대신 block 권장 (애니메이션 효과를 위해) */
+  max-height: 1000px; /* 충분히 큰 값 */
+  overflow: hidden;
+  max-height: 500px;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+  opacity: 1;
+}
+
+.caption.collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  max-height: calc(1.6em * 2);
+}
+
+/* 2. 감정 태그 +N 원형 버튼 스타일 */
+.emotion-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  transition: all 0.4s ease;
+}
+
+.tag-more-count {
+  width: 32px;
+  height: 32px;
+  background: #444;
+  color: #aaa;
+  border-radius: 50%; /* 완전한 원형 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  border: 1px solid #555;
+  transition: all 0.2s ease;
+}
+
+.tag-more-count:hover {
+  background: #555;
+  color: #fff;
+}
+
+/* 3. 태그 영역 확장 애니메이션 */
+.emotion-tags-container {
+  position: relative;
+  overflow: visible;
+  max-height: 40px; /* 접혔을 때 높이 */
+  transition: max-height 0.4s ease-in-out;
+}
+
+.emotion-tags-container.expanded {
+  max-height: 300px; /* 펼쳐졌을 때 여유 높이 */
+}
+
+.more-text {
+  display: inline-block;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  font-size: 10pt;
+  color: #aaa;
+  cursor: pointer;
+  user-select: none;
+}
+
+.more-text:hover {
+  color: #fff;
+}
+
 
 .user-name-row {
   display: flex;
@@ -316,22 +509,50 @@ const tierClass = computed(() => {
   border-radius: 12px;
   font-size: 0.7rem;
   font-weight: bold;
-  color: white;
+  color: #e5e5e5;
   width: fit-content;
 }
 
 .tier-pro {
-  background-color: #4169E1;
+  background-color: #2E3781;
 }
 
 .tier-amateur {
-  background-color: #FF6B6B;
+  background-color: #E1603F;
 }
 
 .tier-newbie {
-  background-color: #51CF66;
+  background-color: #b9a798;
 }
 
-.post-actions { margin-top: auto; display: flex; gap: 20px; }
-.action-btn { background: none; border: none; cursor: pointer; color: white; font-size: 1.1rem; }
+.post-actions {
+  margin-top: auto;
+  display: flex;
+  gap: 20px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+
+.action-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.2s ease;
+}
+
+.action-btn:hover .action-icon {
+  transform: scale(1.1);
+  opacity: 0.85;
+}
+
 </style>

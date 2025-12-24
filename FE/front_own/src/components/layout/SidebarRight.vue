@@ -1,17 +1,27 @@
 <template>
     <aside class="sidebar-right">
+        <div class="empty-section"></div>
 
         <section class="stats-section">
             <div class="circular-progress">
                 <svg viewBox="0 0 36 36" class="circular-chart">
+                    <defs>
+                        <linearGradient id="workoutGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#2E3781" />
+                            <stop offset="50%" stop-color="#E1603F" />
+                            <stop offset="100%" stop-color="#F3DBC8" />
+                        </linearGradient>
+                    </defs>
+
                     <path class="circle-bg"
-                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                          d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     />
                     <path class="circle"
                         :stroke-dasharray="`${(workoutCount / 7) * 100}, 100`"
+                        stroke="url(#workoutGradient)"
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                     />
-                     <text x="18" y="20.35" class="percentage">{{ workoutCount }}</text>
+                     <text x="18" y="21.3" class="percentage">{{ workoutCount }}</text>
                 </svg>
             </div>
             <p class="stats-label">이번 주 {{ workoutCount }}번 OWN완 했어요!</p>
@@ -72,6 +82,11 @@ watch(() => route.path, (newPath) => {
     
 }
 
+.empty-section {
+    margin-top: 20px;
+    margin-bottom: 80px;
+}
+
 .circular-chart {
     display: block;
     margin: 10px auto;
@@ -80,26 +95,28 @@ watch(() => route.path, (newPath) => {
 
 .circle-bg {
     fill: none;
-    stroke: #333;
-    stroke-width: 3px;
+    stroke: #333; /* 배경 원은 어둡게 유지 */
+    stroke-width: 2.8px;
 }
 
 .circle {
-    fill:none;
-    stroke: #1DB954;
-    stroke-width: 3px;
+    fill: none;
+    /* stroke: #1DB954; <- 이 줄을 삭제하거나 주석 처리하세요. HTML에서 url로 제어합니다. */
+    stroke-width: 3.2px; /* 배경보다 살짝 두껍게 하면 더 강조됩니다. */
     stroke-linecap: round;
-    transition: stroke-dasharray 0.5s ease;
+    transition: stroke-dasharray 0.8s ease-in-out; /* 수치 변경 시 부드럽게 차오르는 효과 */
 }
 
 .percentage {
     fill: #fff;
-    font-size: 0.5em;
+    font-size: 0.6em; /* 숫자가 조금 더 잘 보이도록 키움 */
     text-anchor: middle;
     font-weight: bold;
+    font-family: 'Arial', sans-serif;
 }
 
 .stats-label {
+    margin-top: 22px;
     text-align: center;
     font-size: 14px;
     color: #ddd;
@@ -108,7 +125,8 @@ watch(() => route.path, (newPath) => {
 .write-log-btn {
   width: 100%;
   padding: 15px;
-  background: linear-gradient(135deg, #1DB954 0%, #17a34a 100%);
+ 
+  background: linear-gradient(135deg, #2E3781 0%, #E1603F 100%);
   border: none;
   border-radius: 12px;
   color: white;
@@ -119,12 +137,12 @@ watch(() => route.path, (newPath) => {
   justify-content: center;
   gap: 10px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 15px rgba(29, 185, 84, 0.2);
+  
 }
 
 .write-log-btn:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(29, 185, 84, 0.4);
+  box-shadow: 0 8px 25px rgba(225, 96, 63, 0.4);
   filter: brightness(1.1);
 }
 

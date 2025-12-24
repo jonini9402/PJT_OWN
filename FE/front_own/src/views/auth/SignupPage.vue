@@ -1,9 +1,12 @@
 <template>
   <div class="signup-page">
+
+    <div class="bg-animation"></div>
+
     <div class="signup-container">
       <div class="form-section">
         <h1>회원가입</h1>
-
+        
         <div class="signup-form">
           <div class="profile-image-section" @click="openModal">
             <div class="profile-image-wrapper">
@@ -225,13 +228,68 @@ export default {
 <style scoped>
 /* 전체 페이지 배경: 부드러운 그라데이션 */
 .signup-page {
-  width: 100%;
+  width: 100vw;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(#141414 100%); /* 일단 블랙으로 */
-  padding: 40px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-animation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0; /* 배경이므로 가장 뒤로 */
+  overflow: hidden;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.2),
+    rgba(0, 0, 0, 0.1)
+  );
+}
+
+.bg-animation::before,
+.bg-animation::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    #E1603F,
+    #2E3781,
+    #E1603F,
+    #F3DBC8,
+    #2E3781
+  );
+  transform: translate(-50%, -50%);
+  animation: rotate 8s linear infinite;
+  filter: blur(50px);
+  opacity: 0.8;
+}
+
+.bg-animation::after {
+  width: 180%;
+  height: 180%;
+  animation: rotate-reverse 10s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes rotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes rotate-reverse {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(-360deg); }
 }
 
 /* 유리 질감 컨테이너 카드 */

@@ -55,7 +55,7 @@ onMounted(() => {
     if (entries[0].isIntersecting && !loading.value) {
       fetchPosts();
     }
-  }, { threshold: 1.0 });
+  }, { rootMargin: '200px' });
 
   if (loadMoreTrigger.value) {
     observer.observe(loadMoreTrigger.value);

@@ -35,7 +35,7 @@ const routes = [
     path: '/post/create',
     name: 'PostCreate',
     component: () => import('@/views/postcreate/PostCreatePage.vue'),
-    meta: { requiresAuth: true, layout: 'DefaultLayout' }
+    meta: { requiresAuth: false, layout: 'AuthLayout' }
   }
 ]
 

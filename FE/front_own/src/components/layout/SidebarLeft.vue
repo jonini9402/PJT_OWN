@@ -3,29 +3,35 @@
     <!-- 로고 -->
     <div class="logo">
       <router-link to="/">
-        <img src="@/assets/logo/grey.png" alt="OWN LOGO" class="logo-img" />
+        <img src="@/assets/logo/gray.png" alt="OWN LOGO" class="logo-img" />
       </router-link>
       <!--<h1>OWN</h1> -->
     </div>
 
     <!-- 미니 프로필 컴포넌트 -->
-    <MiniProfile />
+    <div class="profile-wrapper">
+      <MiniProfile />
+    </div>
 
     <!-- 메뉴 -->
     <nav class="menu">
       <router-link to="/" class="menu-item">
         <span class="menu-label">홈</span>
+        <img src="@/assets/icons/Home.svg" class="menu-icon" alt="Home" />
       </router-link>
 
       <router-link to="/mypage" class="menu-item">
         <span class="menu-label">마이 로그</span>
+        <img src="@/assets/icons/MyLog.svg" class="menu-icon" alt="MyLog" />
       </router-link>
     </nav>
 
     <!-- 로그아웃 버튼 -->
     <button class="logout-btn" @click="handleLogout">
-      로그아웃
+      <span class="menu-label">로그아웃</span>
+      <img src="@/assets/icons/Logout.svg" class="menu-icon" alt="Logout" />
     </button>
+
   </div>
 </template>
 
@@ -103,6 +109,8 @@ export default {
   transform: scale(1.05); /* 로고 호버 시 살짝 커지는 효과 */
 }
 
+
+
 /* 메뉴 */
 .menu {
   flex: 1;
@@ -111,48 +119,96 @@ export default {
   gap: 4px;
 }
 
-.menu-item {
-  padding: 12px 16px;
+.menu-item, .logout-btn {
+  position: relative;
+  padding: 14px 20px;
   color: #999;
   text-decoration: none;
-  border-radius: 8px;
-  transition: all 0.2s;
-  text-align: left;
-  border-left: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
-.menu-item:hover {
-  background-color: #2a2a2a;
-  color: white;
+.menu-item::before, .logout-btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 5px;
+  height: 100%;
+  
+  /* [해결] 색상 배치를 A-B-C-A 순서로 배치합니다. */
+  /* 마지막에 첫 번째 색상이 다시 와야 자연스럽게 이어집니다. */
+  background: linear-gradient(
+    to bottom, 
+    #2E3781 0%, 
+    #E1603F 33%, 
+    #F3DBC8 66%, 
+    #2E3781 100%
+  );
+  
+  /* 배경 크기를 높게 잡습니다. */
+  background-size: 100% 400%; 
+  background-position: 0% 0%;
+  
+  opacity: 0; 
+  transition: opacity 0.3s ease;
+  z-index: 1;
 }
 
-.menu-item.router-link-active {
-  background-color: #2a2a2a;
-  color: white;
-  border-left-color: #4169E1;
-  font-weight: 600;
+/* 활성화된 버튼 바 표시 */
+.menu-item.router-link-active::before {
+  opacity: 1;
+}
+
+/* 호버 시 바 표시 및 애니메이션 */
+.menu-item:hover::before, .logout-btn:hover::before {
+  opacity: 1;
+  animation: flowLine 5s linear infinite; /* 속도를 조금 늦추면 더 부드럽습니다 */
+}
+
+/* [핵심 수정] 애니메이션 위치값 조정 */
+@keyframes flowLine {
+  0% {
+    /* 시작점 */
+    background-position: 0% 0%;
+  }
+  100% {
+    /* 배경 사이즈와 색상 배치에 맞춰 50% 지점으로 이동 (한 세트 이동) */
+    /* 혹은 0% 100%가 어색하면 0% 50%로 시도해 보세요. */
+    background-position: 0% 135%; 
+  }
+}
+
+/* 5. 아이콘 및 프로필 호버 (기존 요청 유지) */
+.menu-icon {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.menu-item:hover .menu-icon, .logout-btn:hover .menu-icon {
+  transform: scale(1.2);
 }
 
 .menu-label {
   font-size: 15px;
 }
 
-/* 로그아웃 버튼 */
 .logout-btn {
   width: 100%;
-  padding: 12px;
-  background-color: #2a2a2a;
-  color: #999;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.2s;
   margin-top: auto;
+  font-family: inherit;
+  text-align: left;
 }
 
-.logout-btn:hover {
-  background-color: #333;
-  color: white;
+.logout-btn .menu-label {
+  font-size: 15px;
 }
+
 </style>
