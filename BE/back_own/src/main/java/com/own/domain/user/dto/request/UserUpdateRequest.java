@@ -2,7 +2,7 @@ package com.own.domain.user.dto.request;
 
 public class UserUpdateRequest {
 	
-	private String profileImage;
+	private String profileImg;
 	private String oldPassword;
 	private String newPassword;
 	private String newPasswordConfirm;
@@ -12,17 +12,17 @@ public class UserUpdateRequest {
 		
 	}
 	
-	public UserUpdateRequest(String profileImage, String oldPassword, String newPassword, String newPasswordConfirm) {
-		this.profileImage = profileImage;
+	public UserUpdateRequest(String profileImg, String oldPassword, String newPassword, String newPasswordConfirm) {
+		this.profileImg = profileImg;
 		this.oldPassword = oldPassword;
 		this.newPassword = newPassword;
 		this.newPasswordConfirm = newPasswordConfirm;
 	}
-	public String getProfileImage() {
-		return profileImage;
+	public String getProfileImg() {
+		return profileImg;
 	}
-	public void setProfileImage(String profileImage) {
-		this.profileImage = profileImage;
+	public void setProfileImg(String profileImg) {
+		this.profileImg = profileImg;
 	}
 	public String getOldPassword() {
 		return oldPassword;

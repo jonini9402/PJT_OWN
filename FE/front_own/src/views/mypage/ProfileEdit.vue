@@ -2,7 +2,7 @@
   <div class="profile-edit-page">
     <div class="edit-container">
       <div class="form-section">
-        <h1>회원 수정</h1>
+        <h1>프로필 수정</h1>
 
         <div class="edit-form">
           <div class="profile-image-section" @click="openModal">
@@ -29,11 +29,11 @@
 
           <div class="input-group">
             <div class="input-wrapper">
-              <label>OLD PASSWORD</label>
+              <label>현재 비밀번호</label>
               <input
                 v-model="oldPassword"
                 type="password"
-                placeholder="비밀번호 변경 시 입력해주세요"
+                placeholder="비밀번호를 변경하려면 현재 비밀번호를 입력해주세요"
                 @blur="validateOldPassword"
                 :class="{ 'error-border': oldPasswordError }"
               />
@@ -41,11 +41,11 @@
             </div>
 
             <div class="input-wrapper">
-              <label>NEW PASSWORD</label>
+              <label>새 비밀번호</label>
               <input
                 v-model="newPassword"
                 type="password"
-                placeholder="영문, 숫자 조합 8~13자"
+                placeholder="영문과 숫자를 조합해 8~13자로 입력해주세요"
                 @blur="validatePassword"
                 :class="{ 'error-border': passwordError }"
               />
@@ -53,7 +53,7 @@
             </div>
 
             <div class="input-wrapper">
-              <label>CONFIRM PASSWORD</label>
+              <label>새 비밀번호 확인</label>
               <input
                 v-model="newPasswordConfirm"
                 type="password"
@@ -65,14 +65,14 @@
             </div>
           </div>
 
-          <button class="submit-btn" @click="handleUpdate">UPDATE PROFILE</button>
+          <button class="submit-btn" @click="handleUpdate">프로필 업데이트</button>
 
           <p v-if="errorMessage" class="error-global">
             {{ errorMessage }}
           </p>
 
           <p class="back-link">
-            <router-link to="/mypage">Back to My Page</router-link>
+            <router-link to="/mypage">마이페이지로 돌아가기</router-link>
           </p>
 
           <div class="divider"></div>
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-// API 함수 import (deleteUser 추가)
+// API 함수 import 
 import { deleteUser } from '@/api/user.js';
 import ProfileImageModal from '@/components/ProfileImageModal.vue';
 import { useAuthStore } from '@/stores/auth'; // 유저 스토어 import
@@ -136,6 +136,7 @@ export default {
   methods: {
     openModal() { this.isModalOpen = true; },
     closeModal() { this.isModalOpen = false; },
+    // 모달에서 이미지 선택 시
     handleImageSelect(selectedImage) {
       this.profileImg = selectedImage;
       this.imageError = "";
@@ -145,16 +146,8 @@ export default {
       this.imageError = '';
     },
     //유효성 검사 로직
-    validateOldPassword() {
-      if (this.newPassword && !this.oldPassword) {
-        this.oldPasswordError = '기존 비밀번호를 입력하세요';
-        return false;
-      }
-      this.oldPasswordError = '';
-      return true;
-    },
-
     validatePassword() {
+      // 새 비밀번호가 비어있으면 검사 패스 (비밀번호 안 바꿀 거니까)
       if (!this.newPassword) {
         this.passwordError = '';
         return true;
@@ -169,10 +162,8 @@ export default {
     },
 
     validatePasswordConfirm() {
-      if (!this.newPassword && !this.newPasswordConfirm) {
-        this.passwordConfirmError = '';
-        return true;
-      }
+      if (!this.newPassword) return true; // 새 비번 없으면 패스
+
       if (this.newPassword !== this.newPasswordConfirm) {
         this.passwordConfirmError = '비밀번호가 일치하지 않습니다';
         return false;
@@ -183,16 +174,28 @@ export default {
 
     async handleUpdate() {
       this.errorMessage = '';
+      this.oldPasswordError = '';
+      this.passwordError = '';
+      this.passwordConfirmError = '';
+
+      // 1. 변경사항 체크
       const isProfileImgChanged = this.profileImg !== this.originalProfileImg;
-      const isPasswordChanging = this.newPassword || this.newPasswordConfirm || this.oldPassword;
+      // "새 비밀번호" 칸에 입력이 있어야만 비밀번호 변경 시도로 간주
+      const isPasswordChanging = this.newPassword && this.newPassword.length > 0;
 
       if (!isProfileImgChanged && !isPasswordChanging) {
         this.errorMessage = '변경할 내용이 없습니다';
         return;
       }
 
+      // 2. 비밀번호 변경 시에만 유효성 검사 수행
       if (isPasswordChanging) {
-        if (!this.validateOldPassword()) return;
+        // 기존 비밀번호 입력 확인
+        if (!this.oldPassword) {
+          this.oldPasswordError = '현재 비밀번호를 입력해주세요.';
+          return;
+        }
+        // 새 비밀번호 유효성 확인
         if (!this.validatePassword()) return;
         if (!this.validatePasswordConfirm()) return;
       }
@@ -200,17 +203,17 @@ export default {
       const authStore = useAuthStore();
 
       try {
-        // 백엔드 DTO 변수명에 맞춰서 데이터 구성
+        // 3. 서버로 보낼 데이터 구성
         const updateData = {
+          // 이미지는 항상 현재 상태(변경된 값)를 보냄
           profileImg: this.profileImg, 
           
-          oldPassword: this.oldPassword || null,
-          newPassword: this.newPassword || null,
-          newPasswordConfirm: this.newPasswordConfirm || null 
+          // 비밀번호 변경이 아니면 null을 보내서 서버가 "비밀번호 유지"로 인식하게 함
+          oldPassword: isPasswordChanging ? this.oldPassword : null,
+          newPassword: isPasswordChanging ? this.newPassword : null,
+          newPasswordConfirm: isPasswordChanging ? this.newPasswordConfirm : null 
         };
 
-        // 스토어 액션 실행
-       
         const success = await authStore.saveProfileToServer(updateData);
 
         if (success) {
@@ -231,20 +234,12 @@ export default {
       if (!confirm("정말로 탈퇴하시겠습니까?\n삭제된 계정은 복구할 수 없습니다.")) {
         return;
       }
-
       try {
-        // 1. 탈퇴 API 호출
         await deleteUser(this.userId);
-        
-        // 2. 스토어 상태 초기화 (로그아웃)
         const authStore = useAuthStore();
         authStore.logout(); 
-
         alert("회원 탈퇴가 완료되었습니다.");
-        
-        // 3. 로그인 페이지로 이동
         this.$router.push('/login');
-        
       } catch (error) {
         console.error("회원 탈퇴 실패:", error);
         this.errorMessage = "회원 탈퇴 처리 중 오류가 발생했습니다.";
@@ -253,17 +248,13 @@ export default {
 
     async fetchCurrentProfile() {
       const authStore = useAuthStore();
-      
-      // 스토어에 정보가 없으면 로드 시도
       if (!authStore.user) {
          await authStore.fetchUser();
       }
-
-      // 스토어 정보를 컴포넌트 데이터에 세팅
       if (authStore.user) {
         this.userId = authStore.userId;
-        this.profileImg = authStore.profileImg;
-        this.originalProfileImg = authStore.profileImg;
+        this.profileImg = authStore.profileImg; // 스토어 이미지 가져오기
+        this.originalProfileImg = authStore.profileImg; // 비교용 원본 저장
       }
     }
   },
@@ -446,7 +437,7 @@ export default {
 .divider {
   width: 100%;
   height: 1px;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.2);
   margin: 30px 0 20px 0;
 }
 
@@ -456,18 +447,18 @@ export default {
 
 .delete-btn {
   background: transparent;
-  color: #e03e3e; 
-  border: 1px solid rgba(23, 23, 23, 0.4);
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 11px;
+  color: rgba(224, 62, 62, 0.6);
+  border:  none;   
+  padding:  4px 0;       
+  font-size:  11px;
+  border-radius: 20%;
   cursor: pointer;
-  transition: all 0.2s;
-  font-weight: 600;
+  transition: color 0.15s ease;
+  font-weight: 500;   
 }
 
 .delete-btn:hover {
-  background-color: rgba(224, 62, 62, 0.1);
-  border-color: #e03e3e;
+  color: rgba(224, 62, 62, 0.9);
+  text-decoration: underline;
 }
 </style>

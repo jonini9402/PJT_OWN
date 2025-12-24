@@ -33,10 +33,14 @@
 
 	<!-- 유저 정보수정 -->
 	<update id="updateUser">
-		UPDATE users
-		SET
-		profile_img = #{profileImg},
-		password = #{password}
+		UPDATE users  <set>
+        <if test="user.profileImg != null">
+            profile_img = #{user.profileImg},
+        </if>
+        <if test="user.newPassword != null and user.newPassword != ''">
+            password = #{user.newPassword},
+        </if>
+        </set>
 		WHERE user_id = #{userId} AND deleted_at IS NULL
 	</update>
 
