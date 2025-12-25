@@ -15,4 +15,15 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  // 프록시 설정 추가
+  server: {
+    proxy: {
+      '/gmsapi': {
+        target: 'https://gms.ssafy.io',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/gmsapi/, '/gmsapi'),
+        secure: false,
+      }
+    }
+  }
 })

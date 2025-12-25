@@ -10,9 +10,11 @@
       <div class="empty-icon">📝</div>
       <h3 class="empty-title">아직 운동일지가 없어요</h3>
       <p class="empty-description">오늘의 운동을 기록하고<br/>나만의 운동 플레이리스트를 만들어보세요</p>
-      <button class="create-btn" @click="goToCreate">
+
+      <!-- <button class="create-btn" @click="goToCreate">
         첫 운동일지 작성하기
-      </button>
+      </button> -->
+      
     </div>
 
     <!-- 플레이리스트 형태 리스트 -->

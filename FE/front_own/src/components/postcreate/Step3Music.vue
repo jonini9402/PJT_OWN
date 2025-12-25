@@ -26,7 +26,12 @@
                         <p class="p-title">{{ createStore.selectedMusic.musicTitle }}</p>
                         <p class="p-artist">{{ createStore.selectedMusic.artist }}</p>
                     </div>
-                    <MusicPlayer :previewUrl="createStore.selectedMusic.previewUrl" />
+                        <a href="https://www.spotify.com" target="_blank" class="spotify-link">
+                            <div class="logo-wrapper">
+                                <img src="@/assets/spotifyLogo/spotify_logo_white.png" alt="SpotifyLogo" class="spotify-logo white"/>
+                                <img src="@/assets/spotifyLogo/spotify_logo_green.png" alt="SpotifyLogo" class="spotify-logo green"/>
+                            </div>
+                        </a>
                 </div>
                 <div v-else class="empty-msg">
                     <p>검색 결과에서<br/>곡을 선택해주세요</p>
@@ -159,6 +164,56 @@ onMounted(() => {
     margin-bottom: 20px;
 }
 
+.spotify-link {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 5;
+}
+
+.logo-wrapper {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    /* 호버 시 커지는 효과를 wrapper에 부여 */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.spotify-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.3s ease;
+}
+
+/* 초기 상태: 녹색 로고는 숨김 */
+.spotify-logo.green {
+    opacity: 0;
+}
+
+/* 호버 상태 정의 */
+.logo-wrapper:hover {
+    transform: scale(1.3);
+}
+
+.logo-wrapper:hover .white {
+    opacity: 0;
+}
+
+.logo-wrapper:hover .green {
+    opacity: 1;
+}
+
+.logo-wrapper:active {
+    transform: scale(1.1);
+}
+
+
 .divider {
     width: 90%;
     height: 2px;
@@ -180,6 +235,7 @@ onMounted(() => {
 .search-bar {
     display: flex;
     gap: 10px;
+
 }
 
 .search-bar input {

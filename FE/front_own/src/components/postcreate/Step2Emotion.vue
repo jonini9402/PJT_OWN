@@ -172,11 +172,12 @@ const next = () => {
 }
 
 .scroll-area {
-    flex: 1;
+    /* flex: 1; */
+    height: 320px;
     width: 100%;
     overflow-y: auto;
     padding: 0 20px;
-    margin: 20px 0;
+    
 }
 
 .scroll-area::-webkit-scrollbar {
@@ -248,7 +249,7 @@ const next = () => {
     display: flex;
     justify-content: center;
     gap: 12px;
-    padding-top: 20px;
+    padding-top: 22px;
 }
 
 .prev-btn, .next-btn {

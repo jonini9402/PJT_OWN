@@ -4,7 +4,10 @@
       <img :src="music.albumImg" alt="Album Art" class="album-img"
         crossorigin="anonymous" @load="extractColor" @error="handleImageError" />
       <a href="https://www.spotify.com" target="_blank" class="spotify-link">
-        <img src="@/assets/spotifyLogo/spotify_logo_white.png" alt="SpotifyLogo" class="spotify-logo"/>
+        <div class="logo-wrapper">
+            <img src="@/assets/spotifyLogo/spotify_logo_white.png" alt="SpotifyLogo" class="spotify-logo white"/>
+            <img src="@/assets/spotifyLogo/spotify_logo_green.png" alt="SpotifyLogo" class="spotify-logo green"/>
+        </div>
       </a>
     </div>
     
@@ -83,28 +86,51 @@ const handleImageError = (e) => {
 }
 
 .spotify-link {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    z-index: 5;
 }
 
-.spotify-logo{
-  width: 30px;
-  height: 30px;
-  opacity: 0.9;
-
-  cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+.logo-wrapper {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    /* 호버 시 커지는 효과를 wrapper에 부여 */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.spotify-logo:hover {
-  transform: scale(1.3);
-  opacity: 1;
+.spotify-logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.3s ease;
 }
 
-.spotify-logo:active{
-  transform: scale(1.1);
+/* 초기 상태: 녹색 로고는 숨김 */
+.spotify-logo.green {
+    opacity: 0;
+}
+
+/* 호버 상태 정의 */
+.logo-wrapper:hover {
+    transform: scale(1.3);
+}
+
+.logo-wrapper:hover .white {
+    opacity: 0;
+}
+
+.logo-wrapper:hover .green {
+    opacity: 1;
+}
+
+.logo-wrapper:active {
+    transform: scale(1.1);
 }
 
 .card-bottom {

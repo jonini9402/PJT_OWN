@@ -89,7 +89,7 @@ const goToEditPage = () => {
 }
 
 .tier-newbie {
-  background-color: #b9a798;
+  background-color: #69984d;
 }
 
 .edit-text-btn {

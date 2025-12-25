@@ -33,6 +33,10 @@
             </button>
         </section>
 
+        <section class="ai-section">
+          <ChatBotModal />
+        </section>
+        
     </aside>
 </template>
 
@@ -41,6 +45,7 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { getWeeklyCount } from '@/api/post';
+import ChatBotModal from '../ChatBotModal.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -128,6 +133,17 @@ watch(() => route.path, (newPath) => {
   text-align: center;
   font-size: 14px;
   color: #ddd;
+}
+
+.ai-section {
+  margin-top: auto; 
+  padding-bottom: 20px;
+}
+
+@media (max-width: 1100px) {
+  .sidebar-right {
+    display: none;
+  }
 }
 
 .write-log-btn {

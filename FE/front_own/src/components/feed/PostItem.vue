@@ -31,10 +31,12 @@
           </div>
 
           <div class="post-content">
-
             <p class="caption" :class="{ collapsed: !isExpanded }">{{ post.caption || '' }}</p>
-            <span v-if="showMoreButton" class="more-text" @click="toggleExpand">{{ isExpanded ? '접기' : '더보기' }}</span>
+            <span v-if="showCaptionMore && !isExpanded" class="more-text" @click="handleExpand">
+              ... 더보기
+            </span>
           </div>
+
         </div>
 
         <div class="post-bottom">
@@ -49,9 +51,10 @@
                   {{ tag }}
                 </span>
                 
-                <div v-if="!isExpanded && hiddenTagsCount > 0" class="tag-more-count" @click="toggleExpand">
+                <div v-if="!isExpanded && hiddenTagsCount > 0" class="tag-more-count" @click="handleExpand">
                   +{{ hiddenTagsCount }}
                 </div>
+                
               </div>
             </div>
 
@@ -116,14 +119,12 @@ const authStore = useAuthStore();
 
 const isExpanded = ref(false);
 
-const toggleExpand = () => {
-  isExpanded.value = !isExpanded.value;
+const handleExpand = () => {
+  isExpanded.value = true;
 }
 
-const showMoreButton = computed(() => {
-  const hasLongCaption = props.post?.caption && props.post.caption.length > 60;
-  const hasManyTags = (props.post?.emotionTags?.length || 0) > 2;
-  return hasLongCaption || hasManyTags;
+const showCaptionMore = computed(() => {
+  return props.post?.caption && props.post.caption.length > 60;
 });
 
 const hiddenTagsCount = computed(() => {
@@ -135,7 +136,8 @@ const visibleEmotionTags = computed(() => {
   const tags = props.post?.emotionTags || [];
   if (isExpanded.value) return tags;
   return tags.slice(0, 2);
-})
+});
+
 
 const formatDate = (dateArray) => {
   if (!dateArray) return '방금 전';
@@ -311,7 +313,7 @@ const tierClass = computed(() => {
   justify-content: space-between;
   /* 양 끝으로 배치 */
   align-items: stretch;
-  gap: 30px;
+  gap: 15px;
 }
 
 .post-left {
@@ -332,11 +334,11 @@ const tierClass = computed(() => {
 }
 
 .post-right {
-  flex: 0 0 210px; /* 너비 210px 절대 고정 */
+  flex: 0 0 210px; 
   display: flex;
   flex-direction: column;
-  align-items: flex-end; /* 내부의 MusicCardFeed를 오른쪽 정렬 */
-  justify-content: flex-start; /* 상단부터 배치 */
+  align-items: flex-end; /* 오른쪽 정렬 */
+  justify-content: flex-start; /* 상단 배치 */
 }
 
 /* 프로필 영역 */
@@ -347,8 +349,8 @@ const tierClass = computed(() => {
 }
 
 .user-avatar {
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -360,14 +362,15 @@ const tierClass = computed(() => {
 }
 
 .user-nickname {
-  font-size: 14pt;
+  font-size: 12pt;
   font-weight: bold;
   color: white;
   line-height: 1.2;
 }
 
 .post-date {
-  font-size: 10pt;
+  margin-top: 5px;
+  font-size: 9pt;
   color: #aaa;
 }
 
@@ -406,8 +409,8 @@ const tierClass = computed(() => {
 }
 
 .workout-tag {
-  background: #4169E1;
-  color: white;
+  background: #ddd;
+  color: #444;
 }
 
 .emotion-tag {
@@ -417,23 +420,35 @@ const tierClass = computed(() => {
 
 .caption {
   font-size: 10pt;
-  color: #eee;
-  line-height: 1.6;
+  color: #e0e0e0;
+  line-height: 1.7;
   margin: 0;
   
-  width: 100%;
-  max-width: 100%;
-  margin-right: auto;
+  width: calc(100% + 15px);
+  max-width: 120%;
+  margin-right: -15px;
 
-  /* --- 여유 공간 확보를 위한 핵심 코드 --- */
-  min-height: 3.2em; /* 최소 2줄 정도의 높이를 항상 유지 (line-height 1.6 * 2) */
-  margin-bottom: 12px; /* 캡션 바로 아래에 고정 여백 추가 */
-  /* -------------------------------------- */
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-wrap: break-word;
+
+  /* 캡션 여백 */
+  min-height: 3.4em; 
+  margin-bottom: 32px; 
+  
+  letter-spacing: 0.02em;
+  word-spacing: 0.05em;
+  
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  
+  font-weight: 500;
 
   display: block;
   overflow: hidden;
   transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
   opacity: 1;
+
 }
 
 .caption.collapsed {
@@ -441,10 +456,11 @@ const tierClass = computed(() => {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 
-  max-height: calc(1.6em * 2);
+  max-height: calc(3.4em);
+
 }
 
-/* 2. 감정 태그 +N 원형 버튼 스타일 */
+/* 감정 태그 */
 .emotion-tags {
   display: flex;
   gap: 8px;
@@ -487,8 +503,8 @@ const tierClass = computed(() => {
 }
 
 .more-text {
-  display: inline-block;
-  margin-top: 12px;
+  display: flex;
+  margin-top: -30px;
   margin-bottom: 8px;
   font-size: 10pt;
   color: #aaa;
@@ -504,7 +520,7 @@ const tierClass = computed(() => {
 .user-name-row {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
 }
 
 .tier-badge {
@@ -527,7 +543,7 @@ const tierClass = computed(() => {
 }
 
 .tier-newbie {
-  background-color: #b9a798;
+  background-color: #69984d;
 }
 
 .post-actions {

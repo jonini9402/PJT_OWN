@@ -8,6 +8,7 @@
 	<select id="selectAllEmotionTypes" resultType="com.own.domain.emotion.dto.model.EmotionType">
 		 SELECT emotion_type_id, emotion_name
    		 FROM emotion_type
+   		 ORDER BY emotion_type_id ASC;
 	</select>
 
 
